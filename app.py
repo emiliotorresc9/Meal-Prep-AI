@@ -1,20 +1,73 @@
-import os, json, itertools
+# app.py
+import os, json, itertools, re, time
 from flask import Flask, render_template, request, jsonify
-from email.mime.text import MIMEText  # only used if you later enable /email
+from email.mime.text import MIMEText  # reservado si luego habilitas /email
+from dotenv import load_dotenv
 from openai import OpenAI
+
+# ---------- Carga .env en local ----------
+load_dotenv()
 
 # ---------- App & OpenAI ----------
 app = Flask(__name__)
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    organization=os.getenv("OPENAI_ORG") or None,     # necesario si tu key es sk-proj-...
+    project=os.getenv("OPENAI_PROJECT") or None,      # necesario si tu key es sk-proj-...
+    timeout=30                                        # evita cuelgues -> timeouts de gunicorn
+)
 
-# In-memory cache of last suggestions so /recipe can return details without re-generating
-SUGGEST_CACHE = {}  # id -> recipe dict
-_id_counter = itertools.count(1001)  # simple id generator
+# Cache simple para devolver detalles sin re-generar
+SUGGEST_CACHE: dict[int, dict] = {}
+_id_counter = itertools.count(1001)
+
+# ---------- Utils ----------
+def _strip_fences(s: str) -> str:
+    if not s:
+        return s
+    s = s.strip()
+    m = re.match(r"^```(?:json)?\s*([\s\S]*?)\s*```$", s, re.I)
+    return m.group(1).strip() if m else s
+
+def _safe_json(s: str):
+    if not s: return None
+    for candidate in (s, _strip_fences(s)):
+        try:
+            return json.loads(candidate)
+        except Exception:
+            pass
+    # último intento: primer bloque {...}
+    try:
+        i, j = s.find("{"), s.rfind("}")
+        if 0 <= i < j:
+            return json.loads(s[i:j+1])
+    except Exception:
+        pass
+    return None
 
 # ---------- Pages ----------
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.get("/health")
+def health():
+    return {"ok": True}
+
+@app.get("/debug/openai")
+def debug_openai():
+    try:
+        t0 = time.time()
+        r = client.responses.create(
+            model="gpt-4o-mini",
+            input="Reply exactly with: OK",
+            max_output_tokens=32,
+            response_format={"type": "text"},
+        )
+        ms = round((time.time() - t0) * 1000)
+        return jsonify({"ok": True, "latency_ms": ms, "output_text": (r.output_text or "").strip()})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 # ---------- Suggest via AI (no JSON file) ----------
 @app.post("/suggest")
@@ -28,7 +81,6 @@ def suggest():
     goal_text = ", ".join(goals) if goals else "none"
     meal_text = meal_type or "any"
 
-    # Prompt to return STRICT JSON
     sys = (
         "You are Emil-ia, a helpful meal planner AI. "
         "Respond ONLY with valid JSON. No code fencing, no commentary."
@@ -61,45 +113,66 @@ Return STRICT JSON like:
       "cost_usd":3.2,
       "macros":{{"kcal":450,"protein_g":30,"carbs_g":45,"fat_g":15}},
       "ingredients":[{{"name":"Chicken breast","qty":200,"unit":"g"}}]
-    }},
-    ...
+    }}
   ]
 }}
 """
 
+    if not os.getenv("OPENAI_API_KEY"):
+        return jsonify({
+            "recipes": [], "error": "missing_api_key",
+            "notice": "OPENAI_API_KEY is not set on the server."
+        }), 500
+
     try:
         resp = client.responses.create(
-            model="gpt-4.1-mini",
-            input=[{"role":"system","content":sys},{"role":"user","content":user}],
+            model="gpt-4o-mini",
+            input=f"{sys}\n\n{user}",
+            temperature=0.7,
+            max_output_tokens=500,                     # más ligero para Render
+            response_format={"type": "json_object"}    # fuerza JSON válido
         )
-        raw = resp.output_text
-        payload = json.loads(raw)
-        recipes = payload.get("recipes", [])
-    except Exception as e:
-        return jsonify({"recipes": [], "error": f"AI error: {e}"}), 500
+        raw = (resp.output_text or "").strip()
+        payload = _safe_json(raw)
+        if not payload or "recipes" not in payload:
+            return jsonify({
+                "recipes": [], "error": "invalid_json_from_model",
+                "notice": "The AI did not return valid JSON."
+            }), 502
 
-    # assign server ids + cache
+        recipes = payload.get("recipes", []) or []
+    except Exception as e:
+        return jsonify({"recipes": [], "error": f"AI error: {e}"}), 502
+
+    # Asignar IDs y normalizar
     out = []
     SUGGEST_CACHE.clear()
     for r in recipes[:limit]:
+        if not isinstance(r, dict):
+            continue
         rid = next(_id_counter)
         r["id"] = rid
-        # Ensure required keys exist
         r.setdefault("goal", [])
         r.setdefault("macros", {})
         r.setdefault("ingredients", [])
         out.append({
             "id": rid,
             "title": r.get("title", "Recipe"),
-            "meal_type": r.get("meal_type", meal_text),
+            "meal_type": (r.get("meal_type") or meal_text).strip().lower(),
             "goal": r.get("goal", []),
             "time_min": r.get("time_min"),
             "cost_usd": r.get("cost_usd"),
             "macros": r.get("macros", {}),
-            # include ingredients so first message can show them if user clicks immediately
             "ingredients": r.get("ingredients", []),
         })
-        SUGGEST_CACHE[rid] = r  # keep full object
+        SUGGEST_CACHE[rid] = r
+
+    if not out:
+        return jsonify({
+            "recipes": [],
+            "error": "no_recipes",
+            "notice": "The AI returned 0 recipes for the given filters."
+        }), 200
 
     return jsonify({"recipes": out})
 
@@ -111,7 +184,6 @@ def recipe():
     r = SUGGEST_CACHE.get(rid)
     if not r:
         return jsonify({"error": "recipe not found"}), 404
-
     return jsonify({
         "title": r.get("title"),
         "ingredients": r.get("ingredients", []),
@@ -148,11 +220,15 @@ Context:
 - Macros: {json.dumps(macros)}
 - Ingredients: {json.dumps(ingredients, ensure_ascii=False)}
 """
-
     try:
-        resp = client.responses.create(model="gpt-4.1-mini", input=prompt)
+        resp = client.responses.create(
+            model="gpt-4o-mini",
+            input=prompt,
+            max_output_tokens=350,
+            response_format={"type": "text"}
+        )
         message = (resp.output_text or "").strip()
-        formatted = message.replace("  ", " ").strip()
+        formatted = re.sub(r"\s{2,}", " ", message).strip()
         return jsonify({"message": formatted})
     except Exception as e:
         return jsonify({"message": "(AI error) I couldn’t load the instructions right now.", "error": str(e)}), 500
@@ -173,18 +249,22 @@ def ai_chat():
         f"Ingredients: {json.dumps(ingredients, ensure_ascii=False)}\n"
         f"User: {msg}"
     )
-
     try:
-        resp = client.responses.create(model="gpt-4.1-mini", input=coach)
+        resp = client.responses.create(
+            model="gpt-4o-mini",
+            input=coach,
+            max_output_tokens=300,
+            response_format={"type": "text"}
+        )
         return jsonify({"reply": (resp.output_text or "").strip()})
     except Exception as e:
         return jsonify({"reply": f"(error) {e}"}), 500
 
-# (Optional) email endpoint kept for future
+# (Optional) email endpoint placeholder
 @app.post("/email")
 def email():
     return jsonify({"ok": False, "error": "email not configured in this demo"}), 501
 
+# ---------- Main ----------
 if __name__ == "__main__":
-    # For local dev
     app.run(debug=True)
