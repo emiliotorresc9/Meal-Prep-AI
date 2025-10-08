@@ -1,5 +1,4 @@
-Flask==3.0.3
-gunicorn==21.2.0
-openai==2.2.0
-requests
-Jinja2
+flask
+gunicorn
+python-dotenv
+openai>=1.51.0

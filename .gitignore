@@ -1,16 +1,28 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-
-# Entornos
+# Virtual environment
 .venv/
 venv/
 env/
-.env
-.env*/
+ENV/
 
-# SO
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Render build logs
+*.log
+
+# Local data
+data/
