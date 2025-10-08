@@ -1,0 +1,1299 @@
+[
+{
+"id": 101,
+"title": "Greek Yogurt Parfait",
+"meal_type": "breakfast",
+"goal": ["high_protein", "quick_meal", "low_budget"],
+"ingredients": [
+{"name":"greek yogurt","qty":1,"unit":"cup"},
+{"name":"berries","qty":0.5,"unit":"cup"},
+{"name":"oats","qty":0.25,"unit":"cup"},
+{"name":"honey","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.20,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 300, "protein_g": 20},
+"tags": ["breakfast","pantry_only"]
+},
+{
+"id": 102,
+"title": "PB Banana Oats",
+"meal_type": "breakfast",
+"goal": ["gain_muscle", "high_protein", "low_budget"],
+"ingredients": [
+{"name":"oats","qty":1,"unit":"cup"},
+{"name":"milk","qty":1,"unit":"cup"},
+{"name":"banana","qty":1,"unit":"pcs"},
+{"name":"peanut butter","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.10,
+"time_min": 7,
+"difficulty": "easy",
+"macros": {"kcal": 620, "protein_g": 18},
+"tags": ["breakfast","quick_meal"]
+},
+{
+"id": 103,
+"title": "Veggie Egg Scramble",
+"meal_type": "breakfast",
+"goal": ["high_protein", "low_budget", "meal_prep"],
+"ingredients": [
+{"name":"eggs","qty":2,"unit":"pcs"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"tomato","qty":0.5,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.00,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 280, "protein_g": 20},
+"tags": ["gluten_free"]
+},
+{
+"id": 104,
+"title": "Overnight Chia Pudding",
+"meal_type": "breakfast",
+"goal": ["vegan", "dairy_free", "meal_prep", "lose_fat"],
+"ingredients": [
+{"name":"chia seeds","qty":3,"unit":"tbsp"},
+{"name":"almond milk","qty":1,"unit":"cup"},
+{"name":"maple syrup","qty":1,"unit":"tsp"},
+{"name":"berries","qty":0.25,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.30,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 260, "protein_g": 8},
+"tags": ["no_cook","gluten_free"]
+},
+{
+"id": 105,
+"title": "Cottage Cheese & Pineapple Bowl",
+"meal_type": "breakfast",
+"goal": ["high_protein", "quick_meal", "lose_fat"],
+"ingredients": [
+{"name":"cottage cheese","qty":1,"unit":"cup"},
+{"name":"pineapple chunks","qty":0.5,"unit":"cup"},
+{"name":"walnuts","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 26},
+"tags": ["gluten_free"]
+},
+{
+"id": 106,
+"title": "Avocado Toast with Egg",
+"meal_type": "breakfast",
+"goal": ["vegetarian", "high_protein", "quick_meal"],
+"ingredients": [
+{"name":"whole-grain bread","qty":1,"unit":"slice"},
+{"name":"avocado","qty":0.5,"unit":"pcs"},
+{"name":"egg","qty":1,"unit":"pcs"},
+{"name":"lemon juice","qty":0.5,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.40,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 360, "protein_g": 14},
+"tags": []
+},
+{
+"id": 107,
+"title": "Protein Smoothie (DF)",
+"meal_type": "breakfast",
+"goal": ["gain_muscle", "dairy_free", "quick_meal"],
+"ingredients": [
+{"name":"plant protein powder","qty":1,"unit":"scoop"},
+{"name":"banana","qty":1,"unit":"pcs"},
+{"name":"oat milk","qty":1,"unit":"cup"},
+{"name":"peanut butter","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.80,
+"time_min": 3,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 28},
+"tags": ["gluten_free","no_cook"]
+},
+{
+"id": 108,
+"title": "Apple Cinnamon Oatmeal",
+"meal_type": "breakfast",
+"goal": ["low_budget", "meal_prep", "vegetarian"],
+"ingredients": [
+{"name":"oats","qty":0.75,"unit":"cup"},
+{"name":"apple","qty":0.5,"unit":"pcs"},
+{"name":"cinnamon","qty":0.5,"unit":"tsp"},
+{"name":"milk or almond milk","qty":1,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 0.70,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 330, "protein_g": 10},
+"tags": []
+},
+{
+"id": 109,
+"title": "Tofu Breakfast Wrap (DF)",
+"meal_type": "breakfast",
+"goal": ["vegan", "dairy_free", "high_protein"],
+"ingredients": [
+{"name":"whole-wheat tortilla","qty":1,"unit":"pcs"},
+{"name":"firm tofu","qty":4,"unit":"oz"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"salsa","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.50,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 350, "protein_g": 20},
+"tags": ["vegetarian"]
+},
+{
+"id": 110,
+"title": "Egg White & Turkey Omelet",
+"meal_type": "breakfast",
+"goal": ["lose_fat", "high_protein", "gluten_free"],
+"ingredients": [
+{"name":"egg whites","qty":4,"unit":"pcs"},
+{"name":"deli turkey","qty":2,"unit":"oz"},
+{"name":"bell pepper","qty":0.5,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.80,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 220, "protein_g": 28},
+"tags": ["gluten_free"]
+},
+{
+"id": 111,
+"title": "Berry Quinoa Breakfast Bowl (DF)",
+"meal_type": "breakfast",
+"goal": ["dairy_free", "vegan", "meal_prep"],
+"ingredients": [
+{"name":"cooked quinoa","qty":0.75,"unit":"cup"},
+{"name":"berries","qty":0.5,"unit":"cup"},
+{"name":"almonds","qty":1,"unit":"tbsp"},
+{"name":"almond milk","qty":0.5,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.70,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 10},
+"tags": ["gluten_free"]
+},
+{
+"id": 112,
+"title": "Ricotta & Honey Toast",
+"meal_type": "breakfast",
+"goal": ["vegetarian", "quick_meal"],
+"ingredients": [
+{"name":"whole-grain bread","qty":1,"unit":"slice"},
+{"name":"ricotta","qty":3,"unit":"tbsp"},
+{"name":"honey","qty":1,"unit":"tsp"},
+{"name":"strawberries","qty":0.25,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.20,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 280, "protein_g": 12},
+"tags": []
+},
+{
+"id": 113,
+"title": "Spinach & Feta Wrap",
+"meal_type": "breakfast",
+"goal": ["vegetarian", "quick_meal", "low_budget"],
+"ingredients": [
+{"name":"tortilla","qty":1,"unit":"pcs"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"feta","qty":2,"unit":"tbsp"},
+{"name":"egg","qty":1,"unit":"pcs"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.00,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 15},
+"tags": []
+},
+{
+"id": 114,
+"title": "Almond Butter & Banana Rice Cakes (DF)",
+"meal_type": "breakfast",
+"goal": ["dairy_free", "quick_meal", "low_budget"],
+"ingredients": [
+{"name":"rice cakes","qty":2,"unit":"pcs"},
+{"name":"almond butter","qty":1,"unit":"tbsp"},
+{"name":"banana","qty":0.5,"unit":"pcs"},
+{"name":"chia seeds","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 0.90,
+"time_min": 3,
+"difficulty": "easy",
+"macros": {"kcal": 260, "protein_g": 6},
+"tags": ["gluten_free","no_cook"]
+},
+{
+"id": 115,
+"title": "Turkey & Egg Breakfast Muffins",
+"meal_type": "breakfast",
+"goal": ["high_protein", "meal_prep", "gluten_free"],
+"ingredients": [
+{"name":"eggs","qty":4,"unit":"pcs"},
+{"name":"ground turkey","qty":4,"unit":"oz"},
+{"name":"onion","qty":0.25,"unit":"cup"},
+{"name":"bell pepper","qty":0.25,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.50,
+"time_min": 20,
+"difficulty": "medium",
+"macros": {"kcal": 340, "protein_g": 28},
+"tags": ["gluten_free"]
+},
+{
+"id": 116,
+"title": "Skyr & Granola Cup",
+"meal_type": "breakfast",
+"goal": ["high_protein", "quick_meal"],
+"ingredients": [
+{"name":"skyr","qty":1,"unit":"cup"},
+{"name":"granola","qty":0.33,"unit":"cup"},
+{"name":"blueberries","qty":0.33,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 25},
+"tags": []
+},
+
+{
+"id": 201,
+"title": "Bean Quesadillas",
+"meal_type": "lunch",
+"goal": ["low_budget", "quick_meal", "vegetarian"],
+"ingredients": [
+{"name":"tortillas","qty":2,"unit":"pcs"},
+{"name":"refried beans","qty":0.75,"unit":"cup"},
+{"name":"cheese","qty":2,"unit":"oz"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.20,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 20},
+"tags": ["quick_meal","pantry_only"]
+},
+{
+"id": 202,
+"title": "Tuna Salad Lettuce Wraps (DF)",
+"meal_type": "lunch",
+"goal": ["lose_fat", "high_protein", "gluten_free", "dairy_free"],
+"ingredients": [
+{"name":"canned tuna","qty":1,"unit":"can"},
+{"name":"lettuce leaves","qty":4,"unit":"pcs"},
+{"name":"lemon juice","qty":1,"unit":"tbsp"},
+{"name":"olive oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.50,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 32},
+"tags": ["no_cook","pescatarian"]
+},
+{
+"id": 203,
+"title": "Chicken Rice Bowl",
+"meal_type": "lunch",
+"goal": ["gain_muscle", "high_protein", "meal_prep"],
+"ingredients": [
+{"name":"cooked rice","qty":1,"unit":"cup"},
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"broccoli","qty":1,"unit":"cup"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.20,
+"time_min": 15,
+"difficulty": "easy",
+"macros": {"kcal": 560, "protein_g": 45},
+"tags": []
+},
+{
+"id": 204,
+"title": "Hummus Veggie Pita (DF)",
+"meal_type": "lunch",
+"goal": ["vegan", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"whole-wheat pita","qty":1,"unit":"pcs"},
+{"name":"hummus","qty":3,"unit":"tbsp"},
+{"name":"cucumber","qty":0.5,"unit":"cup"},
+{"name":"tomato","qty":0.5,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.10,
+"time_min": 6,
+"difficulty": "easy",
+"macros": {"kcal": 310, "protein_g": 10},
+"tags": ["no_cook"]
+},
+{
+"id": 205,
+"title": "Turkey Spinach Wrap",
+"meal_type": "lunch",
+"goal": ["lose_fat", "high_protein", "quick_meal"],
+"ingredients": [
+{"name":"tortilla","qty":1,"unit":"pcs"},
+{"name":"deli turkey","qty":3,"unit":"oz"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"mustard","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 6,
+"difficulty": "easy",
+"macros": {"kcal": 280, "protein_g": 24},
+"tags": []
+},
+{
+"id": 206,
+"title": "Lentil Tomato Soup (DF)",
+"meal_type": "lunch",
+"goal": ["vegan", "dairy_free", "low_budget", "meal_prep"],
+"ingredients": [
+{"name":"dry lentils","qty":0.5,"unit":"cup"},
+{"name":"tomato puree","qty":1,"unit":"cup"},
+{"name":"onion","qty":0.5,"unit":"cup"},
+{"name":"garlic","qty":2,"unit":"cloves"}
+],
+"servings": 2,
+"cost_per_serving_usd": 0.80,
+"time_min": 25,
+"difficulty": "easy",
+"macros": {"kcal": 300, "protein_g": 16},
+"tags": ["gluten_free"]
+},
+{
+"id": 207,
+"title": "Caprese Couscous Bowl",
+"meal_type": "lunch",
+"goal": ["vegetarian", "quick_meal"],
+"ingredients": [
+{"name":"couscous","qty":0.75,"unit":"cup"},
+{"name":"mozzarella","qty":2,"unit":"oz"},
+{"name":"tomato","qty":0.5,"unit":"cup"},
+{"name":"basil","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.50,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 16},
+"tags": []
+},
+{
+"id": 208,
+"title": "Chickpea Avocado Salad (DF)",
+"meal_type": "lunch",
+"goal": ["vegan", "dairy_free", "gluten_free"],
+"ingredients": [
+{"name":"canned chickpeas","qty":0.75,"unit":"cup"},
+{"name":"avocado","qty":0.5,"unit":"pcs"},
+{"name":"red onion","qty":0.25,"unit":"cup"},
+{"name":"lemon juice","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.30,
+"time_min": 8,
+"difficulty": "easy",
+"macros": {"kcal": 380, "protein_g": 12},
+"tags": ["no_cook"]
+},
+{
+"id": 209,
+"title": "Sardine Toast (DF)",
+"meal_type": "lunch",
+"goal": ["pescatarian", "high_protein", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"whole-grain bread","qty":1,"unit":"slice"},
+{"name":"canned sardines","qty":1,"unit":"tin"},
+{"name":"lemon zest","qty":0.25,"unit":"tsp"},
+{"name":"parsley","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.10,
+"time_min": 5,
+"difficulty": "easy",
+"macros": {"kcal": 320, "protein_g": 25},
+"tags": []
+},
+{
+"id": 210,
+"title": "Quinoa Chicken Salad",
+"meal_type": "lunch",
+"goal": ["high_protein", "meal_prep", "gluten_free"],
+"ingredients": [
+{"name":"cooked quinoa","qty":0.75,"unit":"cup"},
+{"name":"chicken breast","qty":5,"unit":"oz"},
+{"name":"cucumber","qty":0.5,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.30,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 38},
+"tags": ["gluten_free"]
+},
+{
+"id": 211,
+"title": "Turkey Chili (DF)",
+"meal_type": "lunch",
+"goal": ["lose_fat", "dairy_free", "meal_prep", "high_protein"],
+"ingredients": [
+{"name":"ground turkey","qty":6,"unit":"oz"},
+{"name":"kidney beans","qty":0.75,"unit":"cup"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"onion","qty":0.5,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.90,
+"time_min": 25,
+"difficulty": "medium",
+"macros": {"kcal": 440, "protein_g": 36},
+"tags": ["gluten_free"]
+},
+{
+"id": 212,
+"title": "Tofu Teriyaki Bowl (DF)",
+"meal_type": "lunch",
+"goal": ["vegan", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"firm tofu","qty":5,"unit":"oz"},
+{"name":"rice","qty":1,"unit":"cup"},
+{"name":"teriyaki sauce","qty":1,"unit":"tbsp"},
+{"name":"broccoli","qty":1,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 20},
+"tags": []
+},
+{
+"id": 213,
+"title": "Greek Chicken Pita",
+"meal_type": "lunch",
+"goal": ["high_protein", "quick_meal"],
+"ingredients": [
+{"name":"whole-wheat pita","qty":1,"unit":"pcs"},
+{"name":"grilled chicken","qty":5,"unit":"oz"},
+{"name":"tzatziki","qty":2,"unit":"tbsp"},
+{"name":"lettuce","qty":1,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.00,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 32},
+"tags": []
+},
+{
+"id": 214,
+"title": "Pasta Primavera",
+"meal_type": "lunch",
+"goal": ["vegetarian", "low_budget"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"mixed vegetables","qty":1,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tbsp"},
+{"name":"garlic","qty":1,"unit":"clove"}
+],
+"servings": 2,
+"cost_per_serving_usd": 0.90,
+"time_min": 15,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 16},
+"tags": ["vegetarian"]
+},
+{
+"id": 215,
+"title": "Shrimp Avocado Salad (DF)",
+"meal_type": "lunch",
+"goal": ["pescatarian", "dairy_free", "gluten_free"],
+"ingredients": [
+{"name":"shrimp","qty":6,"unit":"oz"},
+{"name":"avocado","qty":0.5,"unit":"pcs"},
+{"name":"mixed greens","qty":2,"unit":"cup"},
+{"name":"lime juice","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.80,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 30},
+"tags": ["gluten_free"]
+},
+{
+"id": 216,
+"title": "BBQ Chickpea Wrap (DF)",
+"meal_type": "lunch",
+"goal": ["vegan", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"tortilla","qty":1,"unit":"pcs"},
+{"name":"canned chickpeas","qty":0.75,"unit":"cup"},
+{"name":"BBQ sauce","qty":1,"unit":"tbsp"},
+{"name":"coleslaw mix","qty":0.5,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.10,
+"time_min": 10,
+"difficulty": "easy",
+"macros": {"kcal": 380, "protein_g": 12},
+"tags": []
+},
+
+{
+"id": 301,
+"title": "Chicken & Veggie Stir-fry (DF)",
+"meal_type": "dinner",
+"goal": ["lose_fat", "high_protein", "dairy_free", "gluten_free"],
+"ingredients": [
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"mixed vegetables","qty":2,"unit":"cup"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"},
+{"name":"ginger","qty":0.5,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.80,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 42},
+"tags": ["low_carb"]
+},
+{
+"id": 302,
+"title": "Tomato Pasta (Pantry)",
+"meal_type": "dinner",
+"goal": ["low_budget", "vegetarian", "quick_meal"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"garlic","qty":1,"unit":"clove"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 0.95,
+"time_min": 15,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 16},
+"tags": ["quick_meal","pantry_only","vegetarian"]
+},
+{
+"id": 303,
+"title": "Baked Salmon & Asparagus (DF)",
+"meal_type": "dinner",
+"goal": ["pescatarian", "dairy_free", "gluten_free", "lose_fat"],
+"ingredients": [
+{"name":"salmon fillet","qty":6,"unit":"oz"},
+{"name":"asparagus","qty":1,"unit":"cup"},
+{"name":"lemon","qty":0.5,"unit":"pcs"},
+{"name":"olive oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 4.20,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 450, "protein_g": 38},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 304,
+"title": "Tofu Veggie Curry (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"firm tofu","qty":6,"unit":"oz"},
+{"name":"mixed vegetables","qty":2,"unit":"cup"},
+{"name":"coconut milk","qty":0.75,"unit":"cup"},
+{"name":"curry paste","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.10,
+"time_min": 22,
+"difficulty": "medium",
+"macros": {"kcal": 560, "protein_g": 22},
+"tags": ["gluten_free"]
+},
+{
+"id": 305,
+"title": "Turkey Meatballs & Zoodles (DF)",
+"meal_type": "dinner",
+"goal": ["keto_friendly", "dairy_free", "lose_fat", "high_protein"],
+"ingredients": [
+{"name":"ground turkey","qty":8,"unit":"oz"},
+{"name":"zucchini (spiralized)","qty":2,"unit":"cup"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"garlic","qty":1,"unit":"clove"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.30,
+"time_min": 25,
+"difficulty": "medium",
+"macros": {"kcal": 480, "protein_g": 40},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 306,
+"title": "Veggie Stir-fry with Rice",
+"meal_type": "dinner",
+"goal": ["vegetarian", "low_budget", "meal_prep"],
+"ingredients": [
+{"name":"rice","qty":1,"unit":"cup"},
+{"name":"mixed vegetables","qty":2,"unit":"cup"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"},
+{"name":"sesame oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.10,
+"time_min": 16,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 12},
+"tags": []
+},
+{
+"id": 307,
+"title": "Garlic Lime Chicken (DF)",
+"meal_type": "dinner",
+"goal": ["dairy_free", "gluten_free", "high_protein"],
+"ingredients": [
+{"name":"chicken thighs","qty":7,"unit":"oz"},
+{"name":"garlic","qty":2,"unit":"cloves"},
+{"name":"lime juice","qty":1,"unit":"tbsp"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.40,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 38},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 308,
+"title": "Black Bean Tacos (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"corn tortillas","qty":3,"unit":"pcs"},
+{"name":"black beans","qty":0.75,"unit":"cup"},
+{"name":"onion","qty":0.25,"unit":"cup"},
+{"name":"salsa","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 0.90,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 15},
+"tags": ["gluten_free"]
+},
+{
+"id": 309,
+"title": "Beef & Broccoli (DF)",
+"meal_type": "dinner",
+"goal": ["high_protein", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"beef strips","qty":6,"unit":"oz"},
+{"name":"broccoli","qty":2,"unit":"cup"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"},
+{"name":"cornstarch","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 3.10,
+"time_min": 18,
+"difficulty": "medium",
+"macros": {"kcal": 520, "protein_g": 40},
+"tags": ["low_carb"]
+},
+{
+"id": 310,
+"title": "Spinach Pesto Pasta",
+"meal_type": "dinner",
+"goal": ["vegetarian", "quick_meal"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"basil pesto","qty":2,"unit":"tbsp"},
+{"name":"parmesan","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.20,
+"time_min": 14,
+"difficulty": "easy",
+"macros": {"kcal": 560, "protein_g": 18},
+"tags": []
+},
+{
+"id": 311,
+"title": "Cilantro Lime Shrimp (DF)",
+"meal_type": "dinner",
+"goal": ["pescatarian", "dairy_free", "gluten_free", "quick_meal"],
+"ingredients": [
+{"name":"shrimp","qty":7,"unit":"oz"},
+{"name":"cilantro","qty":1,"unit":"tbsp"},
+{"name":"lime juice","qty":1,"unit":"tbsp"},
+{"name":"garlic","qty":1,"unit":"clove"}
+],
+"servings": 1,
+"cost_per_serving_usd": 3.20,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 360, "protein_g": 32},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 312,
+"title": "Chickpea Tomato Curry (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "low_budget", "meal_prep"],
+"ingredients": [
+{"name":"chickpeas","qty":1,"unit":"cup"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"onion","qty":0.5,"unit":"cup"},
+{"name":"curry powder","qty":1,"unit":"tsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 0.85,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 460, "protein_g": 16},
+"tags": ["gluten_free"]
+},
+{
+"id": 313,
+"title": "Turkey & Sweet Potato Skillet (DF)",
+"meal_type": "dinner",
+"goal": ["dairy_free", "gluten_free", "meal_prep"],
+"ingredients": [
+{"name":"ground turkey","qty":8,"unit":"oz"},
+{"name":"sweet potato","qty":1,"unit":"pcs"},
+{"name":"onion","qty":0.5,"unit":"cup"},
+{"name":"paprika","qty":0.5,"unit":"tsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.10,
+"time_min": 24,
+"difficulty": "medium",
+"macros": {"kcal": 520, "protein_g": 34},
+"tags": ["gluten_free"]
+},
+{
+"id": 314,
+"title": "Mushroom Risotto",
+"meal_type": "dinner",
+"goal": ["vegetarian"],
+"ingredients": [
+{"name":"arborio rice","qty":0.75,"unit":"cup"},
+{"name":"mushrooms","qty":1,"unit":"cup"},
+{"name":"vegetable broth","qty":2,"unit":"cup"},
+{"name":"parmesan","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.80,
+"time_min": 25,
+"difficulty": "medium",
+"macros": {"kcal": 520, "protein_g": 14},
+"tags": []
+},
+{
+"id": 315,
+"title": "Lemon Herb Baked Chicken (DF)",
+"meal_type": "dinner",
+"goal": ["high_protein", "dairy_free", "gluten_free"],
+"ingredients": [
+{"name":"chicken breast","qty":7,"unit":"oz"},
+{"name":"lemon","qty":0.5,"unit":"pcs"},
+{"name":"olive oil","qty":1,"unit":"tbsp"},
+{"name":"mixed herbs","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.50,
+"time_min": 22,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 40},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 316,
+"title": "Pork Fried Rice",
+"meal_type": "dinner",
+"goal": ["low_budget", "meal_prep"],
+"ingredients": [
+{"name":"leftover rice","qty":1,"unit":"cup"},
+{"name":"pork bits","qty":5,"unit":"oz"},
+{"name":"frozen peas & carrots","qty":0.75,"unit":"cup"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.30,
+"time_min": 14,
+"difficulty": "easy",
+"macros": {"kcal": 560, "protein_g": 22},
+"tags": []
+},
+{
+"id": 317,
+"title": "Eggplant & Chickpea Bake (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"eggplant","qty":1,"unit":"cup"},
+{"name":"chickpeas","qty":0.75,"unit":"cup"},
+{"name":"tomato sauce","qty":0.75,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.40,
+"time_min": 28,
+"difficulty": "medium",
+"macros": {"kcal": 480, "protein_g": 16},
+"tags": ["gluten_free"]
+},
+{
+"id": 318,
+"title": "Beef Taco Bowl (DF)",
+"meal_type": "dinner",
+"goal": ["high_protein", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"lean ground beef","qty":6,"unit":"oz"},
+{"name":"brown rice","qty":1,"unit":"cup"},
+{"name":"corn","qty":0.5,"unit":"cup"},
+{"name":"salsa","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.40,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 620, "protein_g": 35},
+"tags": ["gluten_free"]
+},
+
+{
+"id": 319,
+"title": "Zesty Lime Tofu & Peppers (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "lose_fat"],
+"ingredients": [
+{"name":"firm tofu","qty":6,"unit":"oz"},
+{"name":"bell peppers","qty":1.5,"unit":"cup"},
+{"name":"lime juice","qty":1,"unit":"tbsp"},
+{"name":"cumin","qty":0.5,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.70,
+"time_min": 16,
+"difficulty": "easy",
+"macros": {"kcal": 360, "protein_g": 22},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 320,
+"title": "Garlic Butter Shrimp Pasta",
+"meal_type": "dinner",
+"goal": ["pescatarian", "quick_meal"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"shrimp","qty":6,"unit":"oz"},
+{"name":"garlic","qty":2,"unit":"cloves"},
+{"name":"butter","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.10,
+"time_min": 14,
+"difficulty": "easy",
+"macros": {"kcal": 580, "protein_g": 28},
+"tags": []
+},
+{
+"id": 321,
+"title": "Cabbage & Sausage Skillet (DF)",
+"meal_type": "dinner",
+"goal": ["keto_friendly", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"chicken sausage","qty":6,"unit":"oz"},
+{"name":"cabbage","qty":2,"unit":"cup"},
+{"name":"onion","qty":0.5,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 15,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 26},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 322,
+"title": "Broiled Tilapia & Veg (DF)",
+"meal_type": "dinner",
+"goal": ["pescatarian", "dairy_free", "gluten_free", "lose_fat"],
+"ingredients": [
+{"name":"tilapia","qty":6,"unit":"oz"},
+{"name":"zucchini","qty":1,"unit":"cup"},
+{"name":"cherry tomatoes","qty":0.75,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.20,
+"time_min": 16,
+"difficulty": "easy",
+"macros": {"kcal": 360, "protein_g": 34},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 323,
+"title": "Creamy Tomato Chicken Pasta",
+"meal_type": "dinner",
+"goal": ["high_protein", "meal_prep"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"cream cheese","qty":1,"unit":"oz"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.10,
+"time_min": 20,
+"difficulty": "medium",
+"macros": {"kcal": 620, "protein_g": 32},
+"tags": []
+},
+{
+"id": 324,
+"title": "Chorizo & Potato Tacos (DF)",
+"meal_type": "dinner",
+"goal": ["dairy_free", "low_budget"],
+"ingredients": [
+{"name":"corn tortillas","qty":3,"unit":"pcs"},
+{"name":"chorizo","qty":4,"unit":"oz"},
+{"name":"potato","qty":1,"unit":"pcs"},
+{"name":"onion","qty":0.25,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.20,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 18},
+"tags": ["gluten_free"]
+},
+{
+"id": 325,
+"title": "Spinach & Ricotta Stuffed Shells",
+"meal_type": "dinner",
+"goal": ["vegetarian", "meal_prep"],
+"ingredients": [
+{"name":"jumbo pasta shells","qty":6,"unit":"pcs"},
+{"name":"ricotta","qty":0.5,"unit":"cup"},
+{"name":"spinach","qty":1,"unit":"cup"},
+{"name":"marinara","qty":0.75,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.70,
+"time_min": 24,
+"difficulty": "medium",
+"macros": {"kcal": 540, "protein_g": 22},
+"tags": []
+},
+{
+"id": 326,
+"title": "Coconut Lime Chickpeas (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "gluten_free"],
+"ingredients": [
+{"name":"chickpeas","qty":1,"unit":"cup"},
+{"name":"coconut milk","qty":0.75,"unit":"cup"},
+{"name":"lime juice","qty":1,"unit":"tbsp"},
+{"name":"spinach","qty":1,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.20,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 14},
+"tags": ["gluten_free"]
+},
+{
+"id": 327,
+"title": "Chicken Fajita Bowl (DF)",
+"meal_type": "dinner",
+"goal": ["high_protein", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"bell peppers","qty":1.5,"unit":"cup"},
+{"name":"onion","qty":0.5,"unit":"cup"},
+{"name":"rice","qty":1,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.10,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 560, "protein_g": 38},
+"tags": []
+},
+{
+"id": 328,
+"title": "Zucchini Turkey Lasagna (DF)",
+"meal_type": "dinner",
+"goal": ["keto_friendly", "dairy_free", "lose_fat"],
+"ingredients": [
+{"name":"zucchini (sliced)","qty":2,"unit":"cup"},
+{"name":"ground turkey","qty":7,"unit":"oz"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"nutritional yeast","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 2.40,
+"time_min": 28,
+"difficulty": "medium",
+"macros": {"kcal": 480, "protein_g": 36},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 329,
+"title": "Peanut Soba Noodles",
+"meal_type": "dinner",
+"goal": ["vegetarian", "quick_meal", "low_budget"],
+"ingredients": [
+{"name":"soba noodles","qty":2,"unit":"cup"},
+{"name":"peanut butter","qty":1.5,"unit":"tbsp"},
+{"name":"soy sauce","qty":1,"unit":"tbsp"},
+{"name":"carrot (shredded)","qty":0.5,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.10,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 560, "protein_g": 18},
+"tags": []
+},
+{
+"id": 330,
+"title": "Bulgur Tabbouleh with Chickpeas (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "lose_fat"],
+"ingredients": [
+{"name":"bulgur (cooked)","qty":1,"unit":"cup"},
+{"name":"chickpeas","qty":0.75,"unit":"cup"},
+{"name":"parsley","qty":0.5,"unit":"cup"},
+{"name":"lemon juice","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 0.95,
+"time_min": 15,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 14},
+"tags": []
+},
+{
+"id": 331,
+"title": "Creamy Spinach Chicken",
+"meal_type": "dinner",
+"goal": ["high_protein", "meal_prep"],
+"ingredients": [
+{"name":"chicken breast","qty":7,"unit":"oz"},
+{"name":"spinach","qty":1.5,"unit":"cup"},
+{"name":"cream","qty":0.25,"unit":"cup"},
+{"name":"garlic","qty":1,"unit":"clove"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.60,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 42},
+"tags": ["gluten_free"]
+},
+{
+"id": 332,
+"title": "Sweet Chili Tofu & Rice (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "meal_prep"],
+"ingredients": [
+{"name":"firm tofu","qty":7,"unit":"oz"},
+{"name":"rice","qty":1,"unit":"cup"},
+{"name":"sweet chili sauce","qty":1.5,"unit":"tbsp"},
+{"name":"green onion","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 1.60,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 540, "protein_g": 22},
+"tags": []
+},
+{
+"id": 333,
+"title": "Herbed White Fish & Quinoa (DF)",
+"meal_type": "dinner",
+"goal": ["pescatarian", "dairy_free", "gluten_free", "lose_fat"],
+"ingredients": [
+{"name":"white fish","qty":6,"unit":"oz"},
+{"name":"quinoa (cooked)","qty":0.75,"unit":"cup"},
+{"name":"herbs","qty":1,"unit":"tsp"},
+{"name":"lemon juice","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.70,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 32},
+"tags": ["gluten_free"]
+},
+{
+"id": 334,
+"title": "Tomato Basil Chicken Pasta",
+"meal_type": "dinner",
+"goal": ["high_protein", "meal_prep"],
+"ingredients": [
+{"name":"pasta","qty":2,"unit":"cup"},
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"tomato sauce","qty":1,"unit":"cup"},
+{"name":"basil","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.90,
+"time_min": 18,
+"difficulty": "easy",
+"macros": {"kcal": 600, "protein_g": 32},
+"tags": []
+},
+{
+"id": 335,
+"title": "Cauliflower Rice Burrito Bowl (DF)",
+"meal_type": "dinner",
+"goal": ["keto_friendly", "dairy_free", "lose_fat"],
+"ingredients": [
+{"name":"cauliflower rice","qty":2,"unit":"cup"},
+{"name":"ground beef (lean)","qty":6,"unit":"oz"},
+{"name":"corn","qty":0.5,"unit":"cup"},
+{"name":"salsa","qty":2,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.20,
+"time_min": 17,
+"difficulty": "easy",
+"macros": {"kcal": 480, "protein_g": 32},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 336,
+"title": "Spicy Peanut Tofu Lettuce Cups (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "lose_fat"],
+"ingredients": [
+{"name":"firm tofu","qty":6,"unit":"oz"},
+{"name":"lettuce leaves","qty":6,"unit":"pcs"},
+{"name":"peanut sauce","qty":1.5,"unit":"tbsp"},
+{"name":"carrot (shredded)","qty":0.5,"unit":"cup"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.40,
+"time_min": 14,
+"difficulty": "easy",
+"macros": {"kcal": 420, "protein_g": 22},
+"tags": ["gluten_free"]
+},
+{
+"id": 337,
+"title": "Chicken Pesto Zoodles (DF)",
+"meal_type": "dinner",
+"goal": ["keto_friendly", "dairy_free", "high_protein"],
+"ingredients": [
+{"name":"chicken breast","qty":6,"unit":"oz"},
+{"name":"zucchini (spiralized)","qty":2,"unit":"cup"},
+{"name":"pesto (DF)","qty":1.5,"unit":"tbsp"},
+{"name":"cherry tomatoes","qty":0.5,"unit":"cup"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.30,
+"time_min": 16,
+"difficulty": "easy",
+"macros": {"kcal": 460, "protein_g": 36},
+"tags": ["gluten_free","low_carb"]
+},
+{
+"id": 338,
+"title": "Harissa Chickpeas & Couscous (DF)",
+"meal_type": "dinner",
+"goal": ["vegan", "dairy_free", "low_budget"],
+"ingredients": [
+{"name":"couscous","qty":1,"unit":"cup"},
+{"name":"chickpeas","qty":0.75,"unit":"cup"},
+{"name":"harissa paste","qty":1,"unit":"tsp"},
+{"name":"lemon juice","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 0.95,
+"time_min": 12,
+"difficulty": "easy",
+"macros": {"kcal": 440, "protein_g": 14},
+"tags": []
+},
+{
+"id": 339,
+"title": "Pork Tenderloin & Green Beans (DF)",
+"meal_type": "dinner",
+"goal": ["dairy_free", "gluten_free", "high_protein"],
+"ingredients": [
+{"name":"pork tenderloin","qty":6,"unit":"oz"},
+{"name":"green beans","qty":1.5,"unit":"cup"},
+{"name":"garlic","qty":2,"unit":"cloves"},
+{"name":"olive oil","qty":1,"unit":"tbsp"}
+],
+"servings": 1,
+"cost_per_serving_usd": 2.60,
+"time_min": 20,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 38},
+"tags": ["low_carb","gluten_free"]
+},
+{
+"id": 340,
+"title": "Red Lentil Pasta Arrabbiata (DF)",
+"meal_type": "dinner",
+"goal": ["dairy_free", "high_protein", "vegetarian", "gluten_free"],
+"ingredients": [
+{"name":"red lentil pasta","qty":2,"unit":"cup"},
+{"name":"arrabbiata sauce","qty":1,"unit":"cup"},
+{"name":"olive oil","qty":1,"unit":"tsp"},
+{"name":"parsley","qty":1,"unit":"tbsp"}
+],
+"servings": 2,
+"cost_per_serving_usd": 1.80,
+"time_min": 13,
+"difficulty": "easy",
+"macros": {"kcal": 520, "protein_g": 28},
+"tags": ["gluten_free"]
+}
+]
+

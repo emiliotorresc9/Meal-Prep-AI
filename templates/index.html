@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>MealPrepAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/static/meal_prep_logo.jpg" />
+  <style>
+    .chip, .gchip {
+      display: inline-block;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 9999px;
+      background: #ffffff;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+    .chip:hover, .gchip:hover { background: #eef2ff; }
+    .chip.active, .gchip.active {
+      background: #eef2ff;
+      border-color: #4f46e5;
+    }
+    #mealChips .chip, #goalChips .gchip {
+      margin-right: .5rem;
+      margin-bottom: .5rem;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen">
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-1">MealPrepAI</h1>
+    <p class="text-center text-slate-600 mb-6">Plan less. Eat better.</p>
+
+    <!-- STEP 1 -->
+    <section id="step1" class="bg-white p-5 rounded-2xl shadow grid gap-3">
+      <h2 class="text-lg font-semibold">Step 1 — Welcome</h2>
+      <input id="name" class="border rounded p-2" placeholder="Name"/>
+      <input id="email" type="email" class="border rounded p-2" placeholder="Email"/>
+      <button id="toStep2" class="bg-indigo-600 text-white px-4 py-2 rounded">Continue</button>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="step2" class="hidden bg-white p-5 rounded-2xl shadow grid gap-4 mt-6">
+      <h2 class="text-lg font-semibold">Step 2 — Pick a meal & goals</h2>
+
+      <div>
+        <div class="text-sm mb-2 text-slate-600">Meal</div>
+        <div id="mealChips">
+          <button class="chip" data-meal="breakfast">Breakfast</button>
+          <button class="chip" data-meal="lunch">Lunch</button>
+          <button class="chip" data-meal="dinner">Dinner</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="text-sm mb-2 text-slate-600">Goals (pick one or more)</div>
+        <div id="goalChips">
+          <button class="gchip" data-goal="low_budget">💸 Low Budget</button>
+          <button class="gchip" data-goal="quick_meal">⚡ Quick Meal</button>
+          <button class="gchip" data-goal="lose_fat">🥗 Lose Fat</button>
+          <button class="gchip" data-goal="gain_muscle">💪 Gain Muscle</button>
+          <button class="gchip" data-goal="high_protein">🧬 High Protein</button>
+          <button class="gchip" data-goal="vegan">🌱 Vegan</button>
+          <button class="gchip" data-goal="vegetarian">🥦 Vegetarian</button>
+          <button class="gchip" data-goal="gluten_free">🌾 Gluten-Free</button>
+          <button class="gchip" data-goal="keto_friendly">🧈 Keto-Friendly</button>
+          <button class="gchip" data-goal="meal_prep">🗓️ Meal Prep</button>
+          <button class="gchip" data-goal="dairy_free">🥛❌ Dairy-Free</button>
+          <button class="gchip" data-goal="surprise_me">🎲 Surprise Me</button>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="toStep3" class="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50" disabled>
+          Get suggestions
+        </button>
+        <button id="back1" class="px-4 py-2 rounded border">← Back</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section id="step3" class="hidden bg-white p-5 rounded-2xl shadow grid gap-4 mt-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold">Step 3 — Suggested Recipes</h2>
+          <div id="selectedInfo" class="text-slate-700">Select filters to load recipes…</div>
+        </div>
+        <button id="back2" class="px-3 py-2 rounded border">← Back</button>
+      </div>
+
+      <div id="cards" class="grid gap-4"></div>
+
+      <div id="details" class="hidden border-t pt-4">
+        <h3 class="font-semibold mb-1">Selected recipe</h3>
+        <div id="recipeMeta" class="text-sm text-slate-700"></div>
+
+        <div class="mt-3">
+          <b>Ingredients</b>
+          <ul id="ingredients" class="list-disc ml-5 text-sm"></ul>
+        </div>
+
+        <div class="mt-6 border-t pt-4">
+          <b>Cooking coach</b>
+          <div id="chat" class="mt-3 space-y-2 text-sm max-h-64 overflow-auto p-2 bg-slate-50 rounded"></div>
+          <div id="typing" class="text-xs text-slate-500 mt-2 hidden">Emil-ia is typing…</div>
+          <div class="flex gap-2 mt-2">
+            <input id="msg" class="flex-1 border rounded p-2" placeholder="Ask Emil-ia about the recipe..."/>
+            <button id="sendMsg" class="px-4 py-2 rounded bg-indigo-600 text-white">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const step3 = document.getElementById("step3");
+    const toStep2 = document.getElementById("toStep2");
+    const back1 = document.getElementById("back1");
+    const toStep3 = document.getElementById("toStep3");
+    const back2 = document.getElementById("back2");
+    const mealButtons = document.querySelectorAll(".chip");
+    const goalButtons = document.querySelectorAll(".gchip");
+    const selectedInfo = document.getElementById("selectedInfo");
+    const cardsDiv = document.getElementById("cards");
+    const details = document.getElementById("details");
+    const chatDiv = document.getElementById("chat");
+    const typingDiv = document.getElementById("typing");
+    const sendMsg = document.getElementById("sendMsg");
+    const msgInput = document.getElementById("msg");
+
+    let selectedMeal = null;
+    let selectedGoals = [];
+    let chatHistory = []; // 🧠 session memory
+
+    mealButtons.forEach(btn =>
+      btn.addEventListener("click", () => {
+        mealButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedMeal = btn.dataset.meal;
+        enableContinue();
+      })
+    );
+
+    goalButtons.forEach(btn =>
+      btn.addEventListener("click", () => {
+        btn.classList.toggle("active");
+        const val = btn.dataset.goal;
+        if (selectedGoals.includes(val)) selectedGoals = selectedGoals.filter(g => g !== val);
+        else selectedGoals.push(val);
+        enableContinue();
+      })
+    );
+
+    function enableContinue() {
+      toStep3.disabled = !(selectedMeal && selectedGoals.length);
+    }
+
+    toStep2.onclick = () => {
+      step1.classList.add("hidden");
+      step2.classList.remove("hidden");
+    };
+
+    back1.onclick = () => {
+      step2.classList.add("hidden");
+      step1.classList.remove("hidden");
+    };
+
+    toStep3.onclick = () => {
+      step2.classList.add("hidden");
+      step3.classList.remove("hidden");
+      selectedInfo.textContent = `Meal: ${selectedMeal}, Goals: ${selectedGoals.join(", ")}`;
+      loadRecipes();
+    };
+
+    back2.onclick = () => {
+      step3.classList.add("hidden");
+      step2.classList.remove("hidden");
+    };
+
+    // -------- Load recipes --------
+    async function loadRecipes() {
+      cardsDiv.innerHTML = "<div class='text-slate-500'>Loading…</div>";
+      try {
+        const res = await fetch("/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ meal_type: selectedMeal, goals: selectedGoals, limit: 6 })
+        });
+        const data = await res.json();
+        const recipes = data.recipes || [];
+        cardsDiv.innerHTML = "";
+        if (!recipes.length) {
+          cardsDiv.innerHTML = "<div class='text-slate-500'>No matches found.</div>";
+          return;
+        }
+        recipes.forEach(r => {
+          const div = document.createElement("div");
+          div.className = "border p-3 rounded hover:bg-indigo-50 cursor-pointer";
+          const kcal = r?.macros?.kcal ?? "";
+          const tags = (r.goal || []).slice(0,3).map(t => `<span class='text-xs px-2 py-0.5 border rounded-full'>${t.replace('_',' ')}</span>`).join(" ");
+          div.innerHTML = `<b>${r.title}</b><br><span class='text-sm text-slate-600'>${kcal ? `${kcal} kcal` : ""}</span><div class='mt-1 space-x-1'>${tags}</div>`;
+          div.onclick = () => showDetails(r);
+          cardsDiv.appendChild(div);
+        });
+      } catch (e) {
+        console.error(e);
+        cardsDiv.innerHTML = "<div class='text-rose-600'>Error loading recipes.</div>";
+      }
+    }
+
+    // -------- Show recipe details --------
+    async function showDetails(r) {
+      details.classList.remove("hidden");
+      chatDiv.innerHTML = "";
+      chatHistory = []; // reset memory when opening new recipe
+      document.getElementById("recipeMeta").textContent = `${r.title} — ${r.macros?.kcal ?? ""} kcal`;
+
+      let full = r;
+      try {
+        const res = await fetch("/recipe", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ id: r.id })
+        });
+        const data = await res.json();
+        if (!data.error) full = { ...r, ...data };
+      } catch (e) { console.warn(e); }
+
+      const ings = full.ingredients || [];
+      document.getElementById("ingredients").innerHTML =
+        ings.length ? ings.map(i => `<li>${(i.qty ?? "")} ${(i.unit ?? "")} ${(i.name ?? i)}</li>`).join("") : "<li>(No ingredients listed)</li>";
+
+      try {
+        typing(true);
+        const res = await fetch("/ai/instructions", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ recipe: full })
+        });
+        const data = await res.json();
+        typing(false);
+        const raw = data.message || `Hi, I'm Emil-ia! Here's how to prepare ${full.title}.`;
+        const formatted = formatSteps(raw);
+        appendBot(formatted);
+        chatHistory.push({ role: "assistant", content: raw }); // memory stores intro
+      } catch (e) {
+        typing(false);
+        appendBot("(AI error) I couldn't load the instructions right now.");
+      }
+
+      sendMsg.onclick = async () => {
+        const text = msgInput.value.trim();
+        if (!text) return;
+        appendUser(text);
+        msgInput.value = "";
+        typing(true);
+        chatHistory.push({ role: "user", content: text });
+        try {
+          const res = await fetch("/ai/chat", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ message: text, recipe: full, history: chatHistory })
+          });
+          const data = await res.json();
+          typing(false);
+          const formatted = formatSteps(data.reply);
+          appendBot(formatted);
+          chatHistory.push({ role: "assistant", content: data.reply });
+        } catch (err) {
+          typing(false);
+          appendBot(`(error) ${err}`);
+        }
+      };
+    }
+
+    // -------- Helpers --------
+    function appendUser(text) {
+      chatDiv.innerHTML += `<div><b>You:</b> ${escapeHtml(text)}</div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    function appendBot(html) {
+      const safe = String(html).replace(/\n/g, "<br>");
+      chatDiv.innerHTML += `<div><b>Emil-ia:</b> ${safe}</div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    function typing(show) { typingDiv.classList.toggle("hidden", !show); }
+    function escapeHtml(s) { const d = document.createElement("div"); d.innerText = s; return d.innerHTML; }
+
+    // Format steps nicely
+    function formatSteps(text) {
+      let t = text
+        .replace(/\s*([0-9]+)\.\s/g, "<br><br>$1. ")
+        .trim();
+      return t.replace(/\n/g, "<br>");
+    }
+  </script>
+</body>
+</html>
