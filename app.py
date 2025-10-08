@@ -1,141 +1,115 @@
 from flask import Flask, render_template, request, jsonify
-import json, os, random
-import smtplib
+import os, json, random, smtplib
 from email.mime.text import MIMEText
-import os
+from email.mime.multipart import MIMEMultipart
 from openai import OpenAI
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# -------------------------
+# Setup
+# -------------------------
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+app = Flask(__name__, template_folder="templates", static_folder="static")
 
 
-app = Flask(__name__)
-
-# ---------- Data helpers ----------
-def load_recipes():
-    with open(os.path.join("data", "recipes.json"), "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def find_recipe(rid):
-    for r in load_recipes():
-        if r.get("id") == rid:
-            return r
-    return None
-
-# ---------- Routes ----------
-@app.route("/")
+# -------------------------
+# Routes
+# -------------------------
+@app.get("/")
 def index():
     return render_template("index.html")
+
 
 @app.post("/suggest")
 def suggest():
     """
+    Generates 3–5 recipe ideas from OpenAI based on user inputs.
     Input JSON:
     {
-      "meal_type": "breakfast|lunch|dinner",
-      "goals": ["low_budget","quick_meal","lose_fat","gain_muscle","high_protein",
-                "vegan","vegetarian","gluten_free","keto_friendly","meal_prep",
-                "dairy_free","surprise_me"],
-      "limit": 6
+      "meal_type": "breakfast|lunch|dinner" | null,
+      "goals": [ ... ],
+      "comments": "free text" | null,
+      "limit": int (3..6)
     }
     """
     data = request.get_json() or {}
     meal_type = (data.get("meal_type") or "").strip().lower()
-    goals = [g.strip().lower() for g in (data.get("goals") or [])]
-    limit = int(data.get("limit") or 6)
+    goals = data.get("goals") or []
+    comments = (data.get("comments") or "").strip()
+    limit = int(data.get("limit") or 5)
+    limit = max(3, min(limit, 6))
 
-    recipes = load_recipes()
+    # Map some icons for fun tags
+    emoji_map = {
+        "breakfast": "🍳", "lunch": "🥪", "dinner": "🍽️",
+        "low_budget": "🪙", "quick_meal": "⚡", "lose_fat": "🥗", "gain_muscle": "💪",
+        "high_protein": "🧬", "vegan": "🌱", "vegetarian": "🥦", "gluten_free": "🌾",
+        "keto_friendly": "🧈", "meal_prep": "📅", "dairy_free": "🥛❌", "surprise_me": "🎲"
+    }
 
-    # 1) meal_type filter
-    if meal_type:
-        recipes = [r for r in recipes if (r.get("meal_type") or "").lower() == meal_type]
+    # Build prompt
+    prompt = f"""
+You are a meal-planning assistant. Create between 3 and {limit} recipe ideas that match the user's request.
 
-    # 2) goals filter (ALL if possible, else ANY)
-    if goals:
-        def has_all_goals(r):
-            rg = [g.lower() for g in (r.get("goal") or [])]
-            return all(g in rg for g in goals)
+Return STRICT JSON (no prose) as:
+{{
+  "recipes": [
+    {{
+      "id": <int>,
+      "title": <string>,
+      "meal_type": <"breakfast"|"lunch"|"dinner">,
+      "goal": [<snake_case goal tags>],
+      "time_min": <int>,
+      "cost_usd": <number>,
+      "macros": {{"kcal": <int>, "protein_g": <int>, "carbs_g": <int>, "fat_g": <int>}},
+      "ingredients": [{{"qty": <number|string|null>, "unit": <string|null>, "name": <string>}}, ...]
+    }},
+    ...
+  ]
+}}
 
-        strict = [r for r in recipes if has_all_goals(r)]
-        if strict:
-            recipes = strict
-        else:
-            def has_any_goal(r):
-                rg = [g.lower() for g in (r.get("goal") or [])]
-                return any(g in rg for g in goals)
-            recipes = [r for r in recipes if has_any_goal(r)]
+Guidelines:
+- Prefer simple, realistic dishes using common ingredients.
+- Calorie estimate should be reasonable for the meal type.
+- Ingredients list 6–12 items.
+- Match goals if provided.
+- If goals include "surprise_me", you may pick any style.
+- meal_type must be one of breakfast/lunch/dinner. If none provided, choose what fits best the idea.
 
-    # 3) Surprise
-    if goals == ["surprise_me"]:
-        random.shuffle(recipes)
+User inputs:
+- meal_type: "{meal_type}"
+- goals: {goals}
+- comments: "{comments}"
+"""
 
-    # 4) Simple sorting heuristic
-    sorting_goal = None
-    for g in goals:
-        if g in {"low_budget","quick_meal","gain_muscle","high_protein","lose_fat","keto_friendly","low_carb"}:
-            sorting_goal = g
-            break
+    try:
+        resp = client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt,
+            temperature=0.8
+        )
+        # Parse JSON from the model output
+        raw = resp.output_text.strip()
+        # The model should return JSON; try to load it
+        data_json = json.loads(raw)
+        recipes = data_json.get("recipes", [])
+    except Exception as e:
+        # On failure, return empty list with error
+        return jsonify({"recipes": [], "error": str(e)})
 
-    def safe_get(d, path, default=999999):
-        try:
-            cur = d
-            for p in path:
-                cur = cur[p]
-            return cur
-        except Exception:
-            return default
+    # Cosmetic: attach first goal emoji into tags if missing, keep as-is otherwise
+    for r in recipes:
+        r.setdefault("goal", [])
+        # ensure ids
+        if "id" not in r:
+            r["id"] = random.randint(100000, 999999)
+        # normalize keys
+        if "cost_per_serving_usd" in r and "cost_usd" not in r:
+            r["cost_usd"] = r.get("cost_per_serving_usd")
 
-    if sorting_goal == "low_budget":
-        recipes.sort(key=lambda r: r.get("cost_per_serving_usd", 9999))
-    elif sorting_goal == "quick_meal":
-        recipes.sort(key=lambda r: r.get("time_min", 9999))
-    elif sorting_goal in {"gain_muscle","high_protein"}:
-        recipes.sort(key=lambda r: safe_get(r, ["macros","protein_g"], -9999), reverse=True)
-    elif sorting_goal in {"lose_fat","keto_friendly","low_carb"}:
-        recipes.sort(key=lambda r: safe_get(r, ["macros","kcal"], 9999))
+    return jsonify({"recipes": recipes})
 
-    # 5) shape response
-    selected = recipes[:limit]
-    slim = [{
-        "id": r["id"],
-        "title": r["title"],
-        "meal_type": r.get("meal_type"),
-        "goal": r.get("goal", []),
-        "cost_per_serving_usd": r.get("cost_per_serving_usd", r.get("cost_usd", 0.0)),
-        "time_min": r.get("time_min", 20),
-        "macros": r.get("macros", {}),
-        "ingredients": r.get("ingredients", [])
-    } for r in selected]
-
-    return jsonify({"recipes": slim})
-
-@app.post("/recipe")
-def recipe():
-    data = request.get_json() or {}
-    rid = int(data.get("id", 0))
-    pantry = [p.strip().lower() for p in data.get("pantry", [])]
-
-    r = find_recipe(rid)
-    if not r:
-        return jsonify({"error": "recipe not found"}), 404
-
-    shopping_delta = []
-    for ing in r.get("ingredients", []):
-        name = (ing.get("name") or "").lower()
-        if name and name not in pantry:
-            shopping_delta.append({"item": ing.get("name"), "qty": ing.get("qty"), "unit": ing.get("unit")})
-
-    time_min = r.get("time_min", 20)
-
-    return jsonify({
-        "title": r["title"],
-        "ingredients": r["ingredients"],
-        "cost_usd": float(r.get("cost_per_serving_usd", r.get("cost_usd", 0.0))),
-        "macros": r.get("macros", {}),
-        "shopping_delta": shopping_delta,
-        "time_min": time_min
-    })
-
-# ---------- AI endpoints (ENGLISH) ----------
 
 @app.post("/ai/instructions")
 def ai_instructions():
@@ -151,6 +125,7 @@ def ai_instructions():
     ingredients = r.get("ingredients", [])
     macros = r.get("macros", {})
     time_min = r.get("time_min")
+    cost_usd = r.get("cost_usd", r.get("cost_per_serving_usd"))
 
     prompt = f"""
 You are Emil-ia, a friendly cooking assistant for MealPrepAI.
@@ -167,21 +142,19 @@ Your job:
 - End with: "If you have any questions, let me know!"
 
 Use only ENGLISH, natural friendly tone (like a human cooking coach).
-You can include little helpful tips (heat level, timing, texture, etc.).
 Be concise, warm, and clear.
 
 Recipe context:
 Title: {title}
 Meal type: {meal_type}
 Ingredients: {json.dumps(ingredients, ensure_ascii=False)}
-Known data: {json.dumps(macros, ensure_ascii=False)}, time_min={time_min}
+Known data: {json.dumps(macros, ensure_ascii=False)}, time_min={time_min}, cost_usd={cost_usd}
 """
 
     try:
         resp = client.responses.create(model="gpt-4.1-mini", input=prompt)
-        message = resp.output_text.strip()
-
-        # Ensure numbered steps are separated by line breaks if model compresses them
+        message = (resp.output_text or "").strip()
+        # Make sure steps break lines in case model compresses
         formatted = message.replace(". ", ".\n").replace("  ", " ").strip()
         return jsonify({"message": formatted})
     except Exception as e:
@@ -189,7 +162,6 @@ Known data: {json.dumps(macros, ensure_ascii=False)}, time_min={time_min}
             "message": "(AI error) I couldn’t load the instructions right now.",
             "error": str(e)
         }), 500
-
 
 
 @app.post("/ai/chat")
@@ -218,51 +190,120 @@ def ai_chat():
     except Exception as e:
         return jsonify({"reply": f"(error) {e}"}), 500
 
+
 @app.post("/email")
-def email():
+def email_send():
+    """
+    Sends recipe + macros + ingredients + instructions to user's email.
+    Input:
+    {
+      "to": "user@example.com",
+      "name": "User",
+      "recipe": {title, time_min?, cost_usd?, macros?, ingredients[]},
+      "instructions": "<text>"
+    }
+    """
     data = request.get_json() or {}
-    to = data.get("to")
-    name = data.get("name", "there")
-    title = data.get("title", "Selected Recipe")
-    items = data.get("shopping_delta", [])
-    total = float(data.get("total_estimated", 0.0))
+    to = (data.get("to") or "").strip()
+    name = data.get("name") or "there"
+    recipe = data.get("recipe") or {}
+    instructions = (data.get("instructions") or "").strip()
 
     if not to:
-        return jsonify({"ok": False, "error": "missing email"}), 400
+        return jsonify({"ok": False, "error": "Missing recipient email"}), 400
 
-    body_lines = [
-        f"Hi {name},",
-        f"Here’s your grocery list for '{title}':",
-        ""
+    title = recipe.get("title", "Selected Recipe")
+    time_min = recipe.get("time_min")
+    cost_usd = recipe.get("cost_usd", recipe.get("cost_per_serving_usd"))
+    macros = recipe.get("macros", {})
+    ingredients = recipe.get("ingredients", [])
+
+    macros_line = []
+    if macros.get("kcal"): macros_line.append(f'{macros["kcal"]} kcal')
+    if macros.get("protein_g"): macros_line.append(f'{macros["protein_g"]}g protein')
+    if macros.get("carbs_g"):   macros_line.append(f'{macros["carbs_g"]}g carbs')
+    if macros.get("fat_g"):     macros_line.append(f'{macros["fat_g"]}g fat')
+    macros_line = " • ".join(macros_line) if macros_line else "—"
+
+    # Plain text body
+    text_lines = [
+        f"Hi {name}, I’m Emil-ia 👋",
+        "",
+        f"Here’s your recipe: {title}",
+        f"Time: ~{time_min} min" if time_min else "",
+        f"Estimated cost: ${cost_usd:.2f}" if isinstance(cost_usd, (int, float)) else "",
+        f"Macros: {macros_line}",
+        "",
+        "Ingredients:"
     ]
-    if items:
-        for i in items:
+    if ingredients:
+        for i in ingredients:
             qty = i.get("qty")
             unit = i.get("unit", "")
-            body_lines.append(f"- {i['item']}: {qty} {unit}".strip())
+            nm = i.get("name") or ""
+            text_lines.append(f"- {qty or ''} {unit} {nm}".strip())
     else:
-        body_lines.append("- Nothing to buy — you have everything 🎉")
-    body_lines += ["", f"Estimated total: ${total:.2f} USD", "", "Happy cooking!", "— MealPrepAI"]
+        text_lines.append("- (not provided)")
+    text_lines += ["", "Instructions:", instructions, "", "Happy cooking!", "— MealPrepAI"]
+
+    text_body = "\n".join([ln for ln in text_lines if ln is not None])
+
+    # Simple HTML body
+    def esc(s): 
+        return (s or "").replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+    ing_html = "".join(
+        f"<li>{esc(str(i.get('qty') or ''))} {esc(i.get('unit') or '')} {esc(i.get('name') or '')}</li>"
+        for i in ingredients
+    ) or "<li>(not provided)</li>"
+    instr_html = "<br>".join(esc(instructions).splitlines())
+    html_body = f"""
+<!doctype html>
+<html>
+  <body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#0f172a;">
+    <p>Hi {esc(name)}, I’m <b>Emil-ia</b> 👋</p>
+    <p>Here’s your recipe:</p>
+    <h2 style="margin:8px 0 4px 0">{esc(title)}</h2>
+    <p style="margin:0 0 8px 0;color:#334155">
+      {f"Time: ~{time_min} min • " if time_min else ""}{f"Estimated cost: ${cost_usd:.2f} • " if isinstance(cost_usd,(int,float)) else ""}Macros: {esc(macros_line)}
+    </p>
+    <h3 style="margin:16px 0 8px 0">Ingredients</h3>
+    <ul style="margin-top:0">{ing_html}</ul>
+    <h3 style="margin:16px 0 8px 0">Instructions</h3>
+    <p style="white-space:pre-wrap">{instr_html}</p>
+    <p style="margin-top:16px">Happy cooking!<br>— MealPrepAI</p>
+  </body>
+</html>
+"""
 
     SMTP_USER = os.getenv("SMTP_USER")
     SMTP_PASS = os.getenv("SMTP_PASS")
     SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER or "no-reply@mealprep.ai")
 
-    if SMTP_USER and SMTP_PASS:
-        try:
-            msg = MIMEText("\n".join(body_lines))
-            msg["Subject"] = f"MealPrepAI — Grocery List for {title}"
-            msg["From"] = SMTP_FROM
-            msg["To"] = to
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-                s.login(SMTP_USER, SMTP_PASS)
-                s.sendmail(msg["From"], [to], msg.as_string())
-            return jsonify({"ok": True, "mode": "smtp"})
-        except Exception as e:
-            return jsonify({"ok": False, "error": str(e)}), 500
-    else:
-        # Dry-run for demo
-        return jsonify({"ok": True, "mode": "dry_run"})
+    if not SMTP_USER or not SMTP_PASS:
+        # Dry-run for local testing
+        return jsonify({"ok": True, "mode": "dry_run", "preview": text_body[:400] + ("..." if len(text_body) > 400 else "")})
 
+    try:
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"MealPrepAI — {title}"
+        msg["From"] = SMTP_FROM
+        msg["To"] = to
+
+        part_text = MIMEText(text_body, "plain", "utf-8")
+        part_html = MIMEText(html_body, "html", "utf-8")
+        msg.attach(part_text)
+        msg.attach(part_html)
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+            s.login(SMTP_USER, SMTP_PASS)
+            s.sendmail(msg["From"], [to], msg.as_string())
+        return jsonify({"ok": True, "mode": "smtp"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+# -------------------------
+# Main
+# -------------------------
 if __name__ == "__main__":
     app.run(debug=True)

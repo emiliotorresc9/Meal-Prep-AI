@@ -1,4 +1,16 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+
+# Entornos
+.venv/
+venv/
+env/
 .env
+.env*/
+
+# SO
+.DS_Store
+Thumbs.db

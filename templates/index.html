@@ -5,300 +5,589 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>MealPrepAI</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="/static/meal_prep_logo.jpg" />
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='meal_prep_logo.jpg') }}">
+
+
+
   <style>
+    /* ===== Shared ===== */
+    body { color:#0f172a; }
+    .ease-soft { transition: all .2s ease; }
+    .card { background:#fff; border:1px solid #e5e7eb; border-radius:1rem; box-shadow:0 2px 10px rgba(2,6,23,.05); }
+    .input-error { border-color:#ef4444 !important; box-shadow:0 0 0 2px rgba(239,68,68,.18); }
+    .hidden { display:none; }
+
+    /* ===== Page 1 topbar & hero ===== */
+    .topbar {
+      background: linear-gradient(100deg, rgba(5,150,105,0.95), rgba(13,148,136,0.95), rgba(4,120,87,0.95));
+      background-size: 200% 200%;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(16,185,129,0.35);
+      animation: gradientShift 14s ease-in-out infinite;
+    }
+    @keyframes gradientShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    .blob { position:absolute; filter:blur(56px); opacity:.16; pointer-events:none; }
+    .blob.sm { filter: blur(44px); opacity:.18; }
+    .blob.lg { filter: blur(72px); opacity:.12; }
+
+    /* Rotator (JS-driven) */
+    .rotator-line { font-size:1.25rem; line-height:1.6; min-height:calc(1em*1.6); color:#065f46; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .fade-in{opacity:1; transform:translateY(0); transition:opacity .9s ease, transform .9s ease}
+    .fade-out{opacity:0; transform:translateY(-8px); transition:opacity .6s ease, transform .6s ease}
+    .pre-in{opacity:0; transform:translateY(8px)}
+
+    /* Feature pills hover (dinámico sutil) */
+    .feature-pill{ transition:transform .18s ease, box-shadow .2s ease; box-shadow:0 2px 12px rgba(16,185,129,0.08); }
+    .feature-pill:hover{ transform:translateY(-1px); box-shadow:0 12px 40px -20px rgba(16,185,129,0.5); }
+
+    /* Floating logo gentle float */
+    @keyframes floatY { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+    .float-slow { animation: floatY 6s ease-in-out infinite; }
+
+    /* Soft pulse for nav CTA */
+    @keyframes softPulse { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
+    .pulse-soft { animation: softPulse 12s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .topbar { animation:none; }
+      .fade-in, .fade-out, .pre-in,
+      .float-slow, .pulse-soft { animation:none !important; transform:none !important; }
+    }
+
+    /* ===== Page 2 (white + light orange) ===== */
     .chip, .gchip {
-      display: inline-block;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 9999px;
-      background: #ffffff;
-      font-size: 0.875rem;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      user-select: none;
+      display:inline-block; padding:.5rem .75rem; border:1px solid #e5e7eb;
+      border-radius:9999px; background:#fff; font-size:.875rem; cursor:pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s; user-select:none;
     }
-    .chip:hover, .gchip:hover { background: #eef2ff; }
+    .chip:hover, .gchip:hover { background:#fff7ed; }            /* amber-50 */
     .chip.active, .gchip.active {
-      background: #eef2ff;
-      border-color: #4f46e5;
+      background:#fffbeb;                                         /* amber-50/75 */
+      border-color:#f59e0b;                                       /* amber-500 */
+      box-shadow:0 0 0 2px rgba(245,158,11,.18);
     }
-    #mealChips .chip, #goalChips .gchip {
-      margin-right: .5rem;
-      margin-bottom: .5rem;
-    }
+    .sticky-top { position: sticky; top: .75rem; z-index: 10; }
+
+    .dash-divider { border-top:1px dashed #fcd34d; } /* amber-300 */
   </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen">
-  <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-1">MealPrepAI</h1>
-    <p class="text-center text-slate-600 mb-6">Plan less. Eat better.</p>
+<body class="min-h-screen">
 
-    <!-- STEP 1 -->
-    <section id="step1" class="bg-white p-5 rounded-2xl shadow grid gap-3">
-      <h2 class="text-lg font-semibold">Step 1 — Welcome</h2>
-      <input id="name" class="border rounded p-2" placeholder="Name"/>
-      <input id="email" type="email" class="border rounded p-2" placeholder="Email"/>
-      <button id="toStep2" class="bg-indigo-600 text-white px-4 py-2 rounded">Continue</button>
-    </section>
+  <!-- ============================= -->
+  <!-- PAGE 1: INTRO + LOGIN (Hero)  -->
+  <!-- ============================= -->
+  <section id="page1" class="bg-gradient-to-br from-emerald-50 via-white to-teal-50 min-h-screen">
+    <!-- NAVBAR -->
+    <header class="topbar w-full">
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between text-white">
+        <div class="flex items-center gap-3">
+          <img src="{{ url_for('static', filename='meal_prep_logo.jpg') }}"
+     alt="MealPrepAI logo"
+     class="w-14 h-14 rounded-xl object-cover ring-1 ring-white/30 shadow-md hover:rotate-1 ease-soft">
 
-    <!-- STEP 2 -->
-    <section id="step2" class="hidden bg-white p-5 rounded-2xl shadow grid gap-4 mt-6">
-      <h2 class="text-lg font-semibold">Step 2 — Pick a meal & goals</h2>
-
-      <div>
-        <div class="text-sm mb-2 text-slate-600">Meal</div>
-        <div id="mealChips">
-          <button class="chip" data-meal="breakfast">Breakfast</button>
-          <button class="chip" data-meal="lunch">Lunch</button>
-          <button class="chip" data-meal="dinner">Dinner</button>
+          <span class="text-2xl font-semibold tracking-tight drop-shadow-sm">MealPrepAI</span>
         </div>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+          <a href="#resources" class="hover:underline underline-offset-4 ease-soft">Resources</a>
+          <a href="#support" class="hover:underline underline-offset-4 ease-soft">Support</a>
+          <a href="#contact" class="hover:underline underline-offset-4 ease-soft">Contact Us</a>
+          <a href="#get-started"
+             class="ml-2 bg-white text-emerald-700 px-4 py-2 rounded-full shadow-sm hover:shadow-md ease-soft pulse-soft">
+            Get Started
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main class="relative overflow-hidden">
+      <!-- fuzzy blobs -->
+      <div class="blob lg -top-24 -left-20 w-96 h-96 rounded-full bg-emerald-400"></div>
+      <div class="blob sm top-24 right-6 w-80 h-80 rounded-full bg-teal-300"></div>
+      <div class="blob bottom-[-4rem] left-1/3 w-96 h-96 rounded-full bg-emerald-300"></div>
+      <div class="blob lg top-1/3 -right-24 w-[34rem] h-[34rem] rounded-full bg-teal-200"></div>
+
+      <!-- Floating brand logo (final position + float) -->
+      <div class="hidden md:block absolute right-64 top-16 bg-white/85 border border-emerald-100 rounded-3xl p-4 shadow-xl ring-1 ring-emerald-200/40 float-slow">
+        <img src="{{ url_for('static', filename='meal_prep_logo.jpg') }}"
+     alt="MealPrepAI logo"
+             class="w-32 h-32 md:w-36 md:h-36 rounded-2xl object-cover shadow-md">
       </div>
 
-      <div>
-        <div class="text-sm mb-2 text-slate-600">Goals (pick one or more)</div>
-        <div id="goalChips">
-          <button class="gchip" data-goal="low_budget">💸 Low Budget</button>
-          <button class="gchip" data-goal="quick_meal">⚡ Quick Meal</button>
-          <button class="gchip" data-goal="lose_fat">🥗 Lose Fat</button>
-          <button class="gchip" data-goal="gain_muscle">💪 Gain Muscle</button>
-          <button class="gchip" data-goal="high_protein">🧬 High Protein</button>
-          <button class="gchip" data-goal="vegan">🌱 Vegan</button>
-          <button class="gchip" data-goal="vegetarian">🥦 Vegetarian</button>
-          <button class="gchip" data-goal="gluten_free">🌾 Gluten-Free</button>
-          <button class="gchip" data-goal="keto_friendly">🧈 Keto-Friendly</button>
-          <button class="gchip" data-goal="meal_prep">🗓️ Meal Prep</button>
-          <button class="gchip" data-goal="dairy_free">🥛❌ Dairy-Free</button>
-          <button class="gchip" data-goal="surprise_me">🎲 Surprise Me</button>
-        </div>
-      </div>
+      <section class="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-6 relative">
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
+          Eat well, <span class="text-emerald-700">stress less</span>.
+        </h1>
 
-      <div class="flex gap-2">
-        <button id="toStep3" class="bg-indigo-600 text-white px-4 py-2 rounded disabled:opacity-50" disabled>
-          Get suggestions
-        </button>
-        <button id="back1" class="px-4 py-2 rounded border">← Back</button>
-      </div>
-    </section>
+        <!-- Rotating AI description -->
+        <div id="rotator" class="mt-4 md:mt-5 rotator-line pre-in"></div>
 
-    <!-- STEP 3 -->
-    <section id="step3" class="hidden bg-white p-5 rounded-2xl shadow grid gap-4 mt-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-semibold">Step 3 — Suggested Recipes</h2>
-          <div id="selectedInfo" class="text-slate-700">Select filters to load recipes…</div>
-        </div>
-        <button id="back2" class="px-3 py-2 rounded border">← Back</button>
-      </div>
+        <p class="mt-6 md:mt-8 text-slate-700 max-w-3xl text-base md:text-lg">
+          Emil-ia helps you plan meals that fit your goals, generates a smart grocery list,
+          and coaches you step by step while you cook — hands free.
+        </p>
 
-      <div id="cards" class="grid gap-4"></div>
-
-      <div id="details" class="hidden border-t pt-4">
-        <h3 class="font-semibold mb-1">Selected recipe</h3>
-        <div id="recipeMeta" class="text-sm text-slate-700"></div>
-
-        <div class="mt-3">
-          <b>Ingredients</b>
-          <ul id="ingredients" class="list-disc ml-5 text-sm"></ul>
-        </div>
-
-        <div class="mt-6 border-t pt-4">
-          <b>Cooking coach</b>
-          <div id="chat" class="mt-3 space-y-2 text-sm max-h-64 overflow-auto p-2 bg-slate-50 rounded"></div>
-          <div id="typing" class="text-xs text-slate-500 mt-2 hidden">Emil-ia is typing…</div>
-          <div class="flex gap-2 mt-2">
-            <input id="msg" class="flex-1 border rounded p-2" placeholder="Ask Emil-ia about the recipe..."/>
-            <button id="sendMsg" class="px-4 py-2 rounded bg-indigo-600 text-white">Send</button>
+        <!-- Feature pills row -->
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <div class="feature-pill flex items-center gap-3 rounded-full border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white px-4 py-3">
+            <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+            <span class="text-slate-800">Personalized suggestions for every goal</span>
+          </div>
+          <div class="feature-pill flex items-center gap-3 rounded-full border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white px-4 py-3">
+            <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+            <span class="text-slate-800">Grocery lists that match your pantry and budget</span>
+          </div>
+          <div class="feature-pill flex items-center gap-3 rounded-full border border-emerald-100 bg-gradient-to-r from-emerald-50 to-white px-4 py-3">
+            <svg class="w-5 h-5 text-emerald-600" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+            <span class="text-slate-800">Step-by-step coaching from Emil-ia</span>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
 
+      <!-- SIGNUP FORM -->
+      <section class="max-w-7xl mx-auto px-6 pb-10 relative">
+        <div class="card p-5 md:p-6">
+          <div class="min-w-0">
+            <h2 class="text-lg font-semibold">Let’s personalize your experience</h2>
+            <p class="text-slate-600 text-sm">Enter your name and email to get started.</p>
+          </div>
+          <div class="mt-4 grid md:grid-cols-3 gap-3">
+            <input id="name" placeholder="Name"
+                   class="border rounded-lg p-3 ease-soft focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"/>
+            <input id="email" type="email" placeholder="Email"
+                   class="border rounded-lg p-3 ease-soft focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"/>
+            <button id="continueBtn"
+                    class="bg-emerald-600 text-white px-5 py-3 rounded-lg font-semibold ease-soft hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              Continue
+            </button>
+          </div>
+          <p id="formError" class="text-rose-600 text-sm mt-3 hidden">Please enter a name and a valid email address.</p>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <!-- ============================= -->
+  <!-- PAGE 2: APP (white + amber)   -->
+  <!-- ============================= -->
+  <section id="page2" class="hidden bg-white min-h-screen">
+    <!-- light top strip with amber accent -->
+    <div class="w-full border-b border-amber-200 bg-amber-50/50">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="text-sm text-amber-800 font-medium">MealPrepAI — Planner</div>
+        <div id="greet" class="text-sm text-slate-500"></div>
+      </div>
+    </div>
+
+    <!-- Full-width planner bar -->
+    <div class="max-w-7xl mx-auto px-6 mt-6">
+      <div class="card p-5 md:p-6">
+        <h2 class="text-lg font-semibold mb-4">Choose your plan</h2>
+
+        <!-- Meal -->
+        <div class="mb-4">
+          <div class="text-sm text-slate-600 mb-2">Meal</div>
+          <div id="mealChips" class="flex flex-wrap gap-2">
+            <button class="chip" data-meal="breakfast">Breakfast</button>
+            <button class="chip" data-meal="lunch">Lunch</button>
+            <button class="chip" data-meal="dinner">Dinner</button>
+          </div>
+        </div>
+
+        <!-- Goals (with emojis) -->
+        <div class="mb-4">
+          <div class="text-sm text-slate-600 mb-2">Goals (pick one or more)</div>
+          <div id="goalChips" class="flex flex-wrap gap-2">
+            <button class="gchip" data-goal="low_budget">🪙 Low Budget</button>
+            <button class="gchip" data-goal="quick_meal">⚡ Quick Meal</button>
+            <button class="gchip" data-goal="lose_fat">🥗 Lose Fat</button>
+            <button class="gchip" data-goal="gain_muscle">💪 Gain Muscle</button>
+            <button class="gchip" data-goal="high_protein">🧬 High Protein</button>
+            <button class="gchip" data-goal="vegan">🌱 Vegan</button>
+            <button class="gchip" data-goal="vegetarian">🥦 Vegetarian</button>
+            <button class="gchip" data-goal="gluten_free">🌾 Gluten-Free</button>
+            <button class="gchip" data-goal="keto_friendly">🧈 Keto-Friendly</button>
+            <button class="gchip" data-goal="meal_prep">📅 Meal Prep</button>
+            <button class="gchip" data-goal="dairy_free">🥛❌ Dairy-Free</button>
+            <button class="gchip" data-goal="surprise_me">🎲 Surprise Me</button>
+          </div>
+        </div>
+
+        <!-- Additional comments (compact + guía) -->
+        <div class="mb-3">
+          <div class="text-sm text-slate-600 mb-2">Additional comments</div>
+          <textarea id="comments" rows="2"
+            placeholder="List ingredients you already have, allergies, and number of servings."
+            class="w-full border rounded-lg p-3 resize-y min-h-[2.75rem] max-h-24 ease-soft focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <button id="applyFilters" class="bg-amber-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-amber-700 ease-soft">
+            Apply
+          </button>
+          <button id="clearFilters" class="px-4 py-2 rounded-full border border-amber-200 text-amber-700 hover:bg-amber-50 ease-soft">
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- main 2-column layout UNDER the planner bar -->
+    <div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- LEFT COLUMN: Recipes -->
+      <aside class="lg:col-span-5">
+        <div class="card p-5">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">Suggested Recipes</h3>
+            <span id="resultCount" class="text-xs text-slate-500">—</span>
+          </div>
+
+          <div id="emptyState" class="text-slate-500 text-sm mt-3">
+            Pick a meal and goals, then hit <b>Apply</b> to see suggestions.
+          </div>
+
+          <div class="dash-divider my-4"></div>
+
+          <div id="cards" class="grid gap-3 max-h-[60vh] overflow-auto pr-1"></div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Chat -->
+      <section class="lg:col-span-7">
+        <div class="card p-5 h-[75vh] flex flex-col bg-white">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-lg font-semibold">Cooking Coach</h2>
+            <div id="selectedInfo" class="text-sm text-slate-600">Awaiting your filters…</div>
+          </div>
+
+          <div id="chat" class="flex-1 overflow-auto rounded-lg p-3 bg-amber-50/60 text-sm"></div>
+
+          <div class="mt-3 flex gap-2 items-center">
+            <input id="msg" class="flex-1 border rounded-lg p-2.5 ease-soft focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                   placeholder="Ask Emil-ia about your plan..."/>
+            <button id="sendMsg"
+              class="px-4 py-2 rounded-lg bg-amber-600 text-white font-medium hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 ease-soft">
+              Send
+            </button>
+            <!-- NEW: send to email button -->
+            <button id="emailBtn"
+              class="px-4 py-2 rounded-lg border border-amber-300 text-amber-800 font-medium hover:bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 ease-soft disabled:opacity-50"
+              title="Pick a recipe first" disabled>
+              Send to my email
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- JS: rotator, validation, app  -->
+  <!-- ============================= -->
   <script>
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const step3 = document.getElementById("step3");
-    const toStep2 = document.getElementById("toStep2");
-    const back1 = document.getElementById("back1");
-    const toStep3 = document.getElementById("toStep3");
-    const back2 = document.getElementById("back2");
-    const mealButtons = document.querySelectorAll(".chip");
-    const goalButtons = document.querySelectorAll(".gchip");
-    const selectedInfo = document.getElementById("selectedInfo");
-    const cardsDiv = document.getElementById("cards");
-    const details = document.getElementById("details");
-    const chatDiv = document.getElementById("chat");
-    const typingDiv = document.getElementById("typing");
-    const sendMsg = document.getElementById("sendMsg");
-    const msgInput = document.getElementById("msg");
+    /* ---------- Rotating line (Page 1) ---------- */
+    const phrases = [
+      "Discover balanced meal plans designed just for you",
+      "Enjoy high-protein dishes made quick and simple",
+      "Find keto-friendly recipes that actually taste amazing",
+      "Explore colorful plant-based and vegan meals",
+      "Stay healthy with low-fat options full of flavor",
+      "Save money with smart, budget-friendly meal prep"
+    ];
+    const rotatorEl = document.getElementById('rotator');
+    let idx = 0, rotatorTimer = null;
+
+    function showPhrase(i) {
+      rotatorEl.classList.remove('fade-in','fade-out','pre-in');
+      rotatorEl.textContent = phrases[i];
+      rotatorEl.classList.add('fade-in');
+      setTimeout(() => { rotatorEl.classList.remove('fade-in'); rotatorEl.classList.add('fade-out'); }, 3600);
+    }
+    function cycle() {
+      idx = (idx + 1) % phrases.length;
+      rotatorEl.classList.remove('fade-out'); rotatorEl.classList.add('pre-in');
+      setTimeout(() => showPhrase(idx), 150);
+    }
+    function startRotator(){ if(!rotatorTimer){ rotatorTimer = setInterval(cycle, 4500); } }
+    function stopRotator(){ if(rotatorTimer){ clearInterval(rotatorTimer); rotatorTimer = null; } }
+
+    // init + pause on hover
+    showPhrase(idx);
+    startRotator();
+    rotatorEl.addEventListener('mouseenter', stopRotator);
+    rotatorEl.addEventListener('mouseleave', startRotator);
+
+    /* ---------- Validation + Page swap ---------- */
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const formError = document.getElementById('formError');
+    const continueBtn = document.getElementById('continueBtn');
+    const greet = document.getElementById('greet');
+
+    // store for email
+    let userName = '';
+    let userEmail = '';
+
+    continueBtn.onclick = () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      nameInput.classList.remove('input-error'); emailInput.classList.remove('input-error');
+
+      if (!name || !validEmail) {
+        formError.classList.remove('hidden');
+        if (!name) nameInput.classList.add('input-error');
+        if (!validEmail) emailInput.classList.add('input-error');
+        return;
+      }
+      formError.classList.add('hidden');
+
+      userName = name;
+      userEmail = email;
+
+      // Swap pages
+      page1.classList.add('hidden');
+      page2.classList.remove('hidden');
+      greet.textContent = `Hello, ${name}!`;
+    };
+
+    /* ---------- Page 2 interactions (real backend) ---------- */
+    const mealChips = document.querySelectorAll('#mealChips .chip');
+    const goalChips = document.querySelectorAll('#goalChips .gchip');
+    const commentsEl = document.getElementById('comments');
+
+    const selectedInfo = document.getElementById('selectedInfo');
+    const cardsDiv = document.getElementById('cards');
+    const emptyState = document.getElementById('emptyState');
+    const resultCount = document.getElementById('resultCount');
+
+    const applyBtn = document.getElementById('applyFilters');
+    const clearBtn = document.getElementById('clearFilters');
+
+    const chatDiv = document.getElementById('chat');
+    const msgInput = document.getElementById('msg');
+    const sendBtn = document.getElementById('sendMsg');
+    const emailBtn = document.getElementById('emailBtn');
 
     let selectedMeal = null;
     let selectedGoals = [];
-    let chatHistory = []; // 🧠 session memory
+    let currentRecipe = null;
+    let chatHistory = [];
+    let lastInstructions = ""; // keep the raw text we got from /ai/instructions
 
-    mealButtons.forEach(btn =>
-      btn.addEventListener("click", () => {
-        mealButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+    // chip handlers
+    mealChips.forEach(btn => {
+      btn.addEventListener('click', () => {
+        mealChips.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         selectedMeal = btn.dataset.meal;
-        enableContinue();
-      })
-    );
+        updateSelectedInfo();
+      });
+    });
+    goalChips.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('active');
+        const k = btn.dataset.goal;
+        if (selectedGoals.includes(k)) selectedGoals = selectedGoals.filter(g => g !== k);
+        else selectedGoals.push(k);
+        updateSelectedInfo();
+      });
+    });
 
-    goalButtons.forEach(btn =>
-      btn.addEventListener("click", () => {
-        btn.classList.toggle("active");
-        const val = btn.dataset.goal;
-        if (selectedGoals.includes(val)) selectedGoals = selectedGoals.filter(g => g !== val);
-        else selectedGoals.push(val);
-        enableContinue();
-      })
-    );
-
-    function enableContinue() {
-      toStep3.disabled = !(selectedMeal && selectedGoals.length);
+    function updateSelectedInfo() {
+      selectedInfo.textContent = `Meal: ${selectedMeal ?? '-'} | Goals: ${selectedGoals.join(', ') || '-'}`
+        + (commentsEl.value.trim() ? ` | Notes: yes` : '');
     }
 
-    toStep2.onclick = () => {
-      step1.classList.add("hidden");
-      step2.classList.remove("hidden");
-    };
+    // helpers: chat UI
+    function escapeHtml(s) { const d = document.createElement('div'); d.innerText = s; return d.innerHTML; }
+    function appendUser(text) {
+      chatDiv.innerHTML += `<div class="mb-1"><b>You:</b> ${escapeHtml(text)}</div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    function appendBot(html) {
+      const safe = String(html).replace(/\n/g, '<br>');
+      chatDiv.innerHTML += `<div class="mb-1"><b>Emil-ia:</b> ${safe}</div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    function typing(on) {
+      if (on) {
+        chatDiv.innerHTML += `<div id="__typing" class="text-xs text-slate-500 mb-1">Generating… this may take a few seconds</div>`;
+      } else {
+        const t = document.getElementById('__typing'); if (t) t.remove();
+      }
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    function formatSteps(text) {
+      let t = text.replace(/\s*([0-9]+)\.\s/g, "<br><br>$1. ").trim();
+      return t.replace(/\n/g, "<br>");
+    }
 
-    back1.onclick = () => {
-      step2.classList.add("hidden");
-      step1.classList.remove("hidden");
-    };
+    // Apply → /suggest
+    applyBtn.onclick = async () => {
+      cardsDiv.innerHTML = '<div class="text-slate-500">Loading… (this may take a few seconds)</div>';
+      resultCount.textContent = '—';
+      emptyState.classList.add('hidden');
 
-    toStep3.onclick = () => {
-      step2.classList.add("hidden");
-      step3.classList.remove("hidden");
-      selectedInfo.textContent = `Meal: ${selectedMeal}, Goals: ${selectedGoals.join(", ")}`;
-      loadRecipes();
-    };
-
-    back2.onclick = () => {
-      step3.classList.add("hidden");
-      step2.classList.remove("hidden");
-    };
-
-    // -------- Load recipes --------
-    async function loadRecipes() {
-      cardsDiv.innerHTML = "<div class='text-slate-500'>Loading…</div>";
       try {
-        const res = await fetch("/suggest", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ meal_type: selectedMeal, goals: selectedGoals, limit: 6 })
+        const res = await fetch('/suggest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            meal_type: selectedMeal,
+            goals: selectedGoals,
+            comments: commentsEl.value.trim() || null,
+            limit: 12
+          })
         });
         const data = await res.json();
         const recipes = data.recipes || [];
-        cardsDiv.innerHTML = "";
+
+        cardsDiv.innerHTML = '';
         if (!recipes.length) {
+          resultCount.textContent = '0';
           cardsDiv.innerHTML = "<div class='text-slate-500'>No matches found.</div>";
           return;
         }
+
         recipes.forEach(r => {
-          const div = document.createElement("div");
-          div.className = "border p-3 rounded hover:bg-indigo-50 cursor-pointer";
-          const kcal = r?.macros?.kcal ?? "";
-          const tags = (r.goal || []).slice(0,3).map(t => `<span class='text-xs px-2 py-0.5 border rounded-full'>${t.replace('_',' ')}</span>`).join(" ");
-          div.innerHTML = `<b>${r.title}</b><br><span class='text-sm text-slate-600'>${kcal ? `${kcal} kcal` : ""}</span><div class='mt-1 space-x-1'>${tags}</div>`;
-          div.onclick = () => showDetails(r);
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded-lg border border-amber-200/70 hover:bg-amber-50/60 hover:shadow-sm cursor-pointer ease-soft';
+          const kcal = r?.macros?.kcal ?? '';
+          const eta = r?.time_min ? ` • ~${r.time_min} min` : '';
+          const tags = (r.goal || []).slice(0,3).map(t => `<span class="text-[11px] px-2 py-0.5 border border-amber-200 rounded-full mr-1 bg-white">${t.replace('_',' ')}</span>`).join(' ');
+          div.innerHTML = `<b>${r.title}</b><br><span class="text-sm text-slate-600">${kcal ? `${kcal} kcal` : ""}${eta}</span><div class="mt-1">${tags}</div>`;
+          div.onclick = () => openRecipe(r);
           cardsDiv.appendChild(div);
         });
+        resultCount.textContent = String(recipes.length);
+        appendBot('I updated your suggestions. Pick a recipe to begin!');
       } catch (e) {
         console.error(e);
         cardsDiv.innerHTML = "<div class='text-rose-600'>Error loading recipes.</div>";
       }
-    }
+    };
 
-    // -------- Show recipe details --------
-    async function showDetails(r) {
-      details.classList.remove("hidden");
-      chatDiv.innerHTML = "";
-      chatHistory = []; // reset memory when opening new recipe
-      document.getElementById("recipeMeta").textContent = `${r.title} — ${r.macros?.kcal ?? ""} kcal`;
+    // Clear filters (UI only)
+    clearBtn.onclick = () => {
+      selectedMeal = null; selectedGoals = [];
+      mealChips.forEach(b => b.classList.remove('active'));
+      goalChips.forEach(b => b.classList.remove('active'));
+      commentsEl.value = '';
+      updateSelectedInfo();
+      cardsDiv.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      resultCount.textContent = '—';
+    };
 
-      let full = r;
-      try {
-        const res = await fetch("/recipe", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ id: r.id })
-        });
-        const data = await res.json();
-        if (!data.error) full = { ...r, ...data };
-      } catch (e) { console.warn(e); }
+    // Open recipe: /ai/instructions (and enable email button)
+    async function openRecipe(card) {
+      currentRecipe = { ...card };
+      chatDiv.innerHTML = ''; // reset chat for new recipe
+      chatHistory = [];
+      emailBtn.disabled = true; // wait until we have instructions
 
-      const ings = full.ingredients || [];
-      document.getElementById("ingredients").innerHTML =
-        ings.length ? ings.map(i => `<li>${(i.qty ?? "")} ${(i.unit ?? "")} ${(i.name ?? i)}</li>`).join("") : "<li>(No ingredients listed)</li>";
+      // Show compact meta + ingredients as first bot message (macros included)
+      const macros = currentRecipe?.macros || {};
+      const macrosLine = [
+        macros.kcal ? `${macros.kcal} kcal` : null,
+        macros.protein_g ? `${macros.protein_g}g protein` : null,
+        macros.carbs_g ? `${macros.carbs_g}g carbs` : null,
+        macros.fat_g ? `${macros.fat_g}g fat` : null,
+      ].filter(Boolean).join(" • ");
 
+      const meta = `${currentRecipe.title}${macrosLine ? " — " + macrosLine : ""}`;
+      const ings = Array.isArray(currentRecipe.ingredients) ? currentRecipe.ingredients : [];
+      const ingList = ings.length
+        ? ings.map(i => `• ${(i.qty ?? '')} ${(i.unit ?? '')} ${(i.name ?? i)}`.trim()).join('<br>')
+        : '• (No ingredients listed)';
+      appendBot(`<div><b>${meta}</b></div><div class="mt-1 text-slate-600">Ingredients:</div><div class="mt-1">${ingList}</div>`);
+
+      // Initial instructions from AI
       try {
         typing(true);
-        const res = await fetch("/ai/instructions", {
-          method: "POST",
-          headers: {"Content-Type":"application/json"},
-          body: JSON.stringify({ recipe: full })
+        const res = await fetch('/ai/instructions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipe: currentRecipe })
         });
         const data = await res.json();
         typing(false);
-        const raw = data.message || `Hi, I'm Emil-ia! Here's how to prepare ${full.title}.`;
-        const formatted = formatSteps(raw);
-        appendBot(formatted);
-        chatHistory.push({ role: "assistant", content: raw }); // memory stores intro
+        const raw = data.message || `Hi, I'm Emil-ia! Here's how to prepare ${currentRecipe.title}.`;
+        lastInstructions = raw;
+        appendBot(formatSteps(raw));
+        chatHistory.push({ role: 'assistant', content: raw });
+        // enable email
+        emailBtn.disabled = !(userEmail && currentRecipe && lastInstructions);
+        emailBtn.title = emailBtn.disabled ? "Pick a recipe first" : "Send this recipe to your email";
       } catch (e) {
         typing(false);
         appendBot("(AI error) I couldn't load the instructions right now.");
       }
+    }
 
-      sendMsg.onclick = async () => {
-        const text = msgInput.value.trim();
-        if (!text) return;
-        appendUser(text);
-        msgInput.value = "";
-        typing(true);
-        chatHistory.push({ role: "user", content: text });
-        try {
-          const res = await fetch("/ai/chat", {
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify({ message: text, recipe: full, history: chatHistory })
-          });
-          const data = await res.json();
-          typing(false);
-          const formatted = formatSteps(data.reply);
-          appendBot(formatted);
-          chatHistory.push({ role: "assistant", content: data.reply });
-        } catch (err) {
-          typing(false);
-          appendBot(`(error) ${err}`);
+    // Chat send → /ai/chat
+    sendBtn.onclick = async () => {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      appendUser(text);
+      msgInput.value = '';
+      typing(true);
+      chatHistory.push({ role: 'user', content: text });
+
+      try {
+        const res = await fetch('/ai/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, recipe: currentRecipe, history: chatHistory })
+        });
+        const data = await res.json();
+        typing(false);
+        const reply = data.reply || '(no reply)';
+        appendBot(formatSteps(reply));
+        chatHistory.push({ role: 'assistant', content: reply });
+      } catch (err) {
+        typing(false);
+        appendBot(`(error) ${escapeHtml(String(err))}`);
+      }
+    };
+    msgInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendBtn.click(); });
+
+    // Send to my email → /email
+    emailBtn.onclick = async () => {
+      if (!userEmail || !currentRecipe || !lastInstructions) return;
+      emailBtn.disabled = true;
+      const original = emailBtn.textContent;
+      emailBtn.textContent = "Sending…";
+
+      try {
+        const res = await fetch('/email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: userEmail,
+            name: userName || 'there',
+            recipe: currentRecipe,
+            instructions: lastInstructions
+          })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          appendBot("📬 I sent the recipe to your email. Check your inbox!");
+        } else {
+          appendBot(`(email error) ${escapeHtml(data.error || 'Unable to send')}`);
         }
-      };
-    }
-
-    // -------- Helpers --------
-    function appendUser(text) {
-      chatDiv.innerHTML += `<div><b>You:</b> ${escapeHtml(text)}</div>`;
-      chatDiv.scrollTop = chatDiv.scrollHeight;
-    }
-    function appendBot(html) {
-      const safe = String(html).replace(/\n/g, "<br>");
-      chatDiv.innerHTML += `<div><b>Emil-ia:</b> ${safe}</div>`;
-      chatDiv.scrollTop = chatDiv.scrollHeight;
-    }
-    function typing(show) { typingDiv.classList.toggle("hidden", !show); }
-    function escapeHtml(s) { const d = document.createElement("div"); d.innerText = s; return d.innerHTML; }
-
-    // Format steps nicely
-    function formatSteps(text) {
-      let t = text
-        .replace(/\s*([0-9]+)\.\s/g, "<br><br>$1. ")
-        .trim();
-      return t.replace(/\n/g, "<br>");
-    }
+      } catch (e) {
+        appendBot(`(email error) ${escapeHtml(String(e))}`);
+      } finally {
+        emailBtn.textContent = original;
+        emailBtn.disabled = false;
+      }
+    };
   </script>
 </body>
 </html>
